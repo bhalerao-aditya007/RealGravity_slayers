@@ -1,0 +1,43 @@
+# One entry = one rate-limit bucket family. A provider is only active if its key env var is set.
+# !! The numbers below are PLACEHOLDERS to START LOW, NOT verified provider limits. !!
+#    Calibrate (docs/MODEL_ROUTING_AND_RATE_LIMITS.md §9); the gateway also overwrites them at runtime from
+#    x-ratelimit-* / retry-after response headers. `30 rpm` is the only figure in the owner's docs (the old nginx limit).
+global:
+  max_concurrency: 4       # in-flight LLM calls across ALL providers (this is gate.state.limit)
+  queue_max: 200
+  max_wait_s: 180          # queue wait before the caller gets 429 + Retry-After (GatewayBusy)
+  safety: 0.9              # use 90 % of any configured rate
+
+groq:
+  base_url: https://api.groq.com/openai/v1
+  key_env: GROQ_API_KEY            # `keys: [ENV1, ENV2]` pool is supported but ONLY for legitimate cases (consenting teammate / separate paid project)
+  rpm: 25
+  tpm: 5000
+  concurrency: 2
+  scope: per_model                 # Groq enforces limits per model
+openrouter:
+  base_url: https://openrouter.ai/api/v1
+  key_env: OPENROUTER_API_KEY
+  rpm: 15
+  daily: 40                        # ':free' models have a tight daily cap — verify; the budget pre-check relies on this number
+  concurrency: 2
+  scope: per_key
+nvidia:
+  base_url: https://integrate.api.nvidia.com/v1
+  key_env: NVIDIA_API_KEY
+  rpm: 30
+  credits: 1000                    # finite free credits (owner's README) — stop at 10 % remaining and ask
+  concurrency: 3
+  scope: per_key
+go:                                # OpenCode Go; limits are dollar WINDOWS (5-hour, weekly), not just rpm
+  base_url: https://opencode.ai/zen/go/v1
+  key_env: GO_API_KEY
+  rpm: 30
+  window_usd: { five_hour: null, weekly: null }
+  concurrency: 3
+  scope: per_key
+# --- optional extra buckets (uncomment + add models) ---
+# google_ai_studio: { base_url: https://generativelanguage.googleapis.com/v1beta/openai, key_env: GOOGLE_AI_STUDIO_API_KEY, rpm: 10, concurrency: 2, scope: per_model }
+# mistral:          { base_url: https://api.mistral.ai/v1, key_env: MISTRAL_API_KEY, rpm: 10, concurrency: 2, scope: per_key }
+# cerebras:         { base_url: https://api.cerebras.ai/v1, key_env: CEREBRAS_API_KEY, rpm: 10, concurrency: 2, scope: per_key }
+# ollama_local:     { base_url: http://127.0.0.1:11434/v1, key_env: null, rpm: 600, concurrency: 1, scope: per_key }   # no external limit; hardware-bound

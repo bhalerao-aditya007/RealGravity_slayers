@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #e4572e;
+  --accent-soft: #f4c9b8;
+  --dept-research: #7c5cd6;
+  --dept-engineering: #2f9e6e;
+  --dept-data: #c9962e;
+  --dept-content: #4a8fbf;
+}
+
+html, body, #root { height: 100%; margin: 0; }
+body {
+  font-family: Inter, sans-serif;
+  background: #FAF7F2;
+  color: #2B2B2E;
+  overscroll-behavior: none;
+}
+
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(43, 43, 46, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(43, 43, 46, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.blueprint-grid-dark {
+  background-image:
+    linear-gradient(rgba(207, 227, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(207, 227, 255, 0.09) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(43,43,46,0.18); border-radius: 4px; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+input[type="range"] { accent-color: var(--accent); }
+input[type="color"] { padding: 0; border: none; background: none; cursor: pointer; }
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: 1px solid rgba(0,0,0,0.15); border-radius: 6px; }

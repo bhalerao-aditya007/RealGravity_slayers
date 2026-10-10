@@ -1,0 +1,17 @@
+# Complexity scoring (docs/TRIAGE_AND_PLANNING.md §2). C = 100 * sum(w_i * s_i) / (10 * sum(w_i))
+weights: { scope: 4.0, code: 3.5, research: 3.0, verify: 2.0, ambiguity: 1.5, depth: 2.0 }
+thresholds: { light_below: 15, heavy_from: 45 }
+workers: { per_c_divisor: 10, min: 1, max: 12, per_department_max: 4 }
+effort_s:
+  light:    { base: 120,  per_c: 8 }
+  standard: { base: 600,  per_c: 60 }
+  heavy:    { base: 3600, per_c: 160 }
+overrides:
+  text_gen_no_repo_scope_le: 3        # -> light
+  departments_ge_for_standard: 3
+  departments_ge_for_heavy: 4
+  always_heavy_classes: [code_fullstack, hybrid]
+pace:
+  light:    { coffee: never,         meals: false, chats: never,      pace: sprint,  stagger_s: 0.6 }
+  standard: { coffee: on_compaction, meals: false, chats: on_handoff, pace: normal,  stagger_s: 1.4 }
+  heavy:    { coffee: on_stage2,     meals: true,  chats: on_handoff, pace: workday, stagger_s: 2.4 }

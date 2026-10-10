@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+dist/
+build/
+
+# Environment and secrets
+.env
+.env.local
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# RealGravity & Deskmates runtime files
+.agent/
+.deskmates/
+*.log
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated agent outputs
+output/

@@ -1,0 +1,8 @@
+{
+  "goal": "Compare the top 3 open-weight coding models and build a tiny CLI that benchmarks one",
+  "duration_real_s": 250,
+  "note": "The full event tape is regenerated deterministically from src/mock/simulator.ts (same script, same order, same timing). This file pins the goal and pacing used by Replay mode and the landing background loop.",
+  "agents": 15,
+  "dag_nodes": 12,
+  "departments": ["research", "engineering", "data", "content"]
+}

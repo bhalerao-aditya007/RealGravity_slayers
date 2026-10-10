@@ -1,0 +1,7 @@
+# Preset departments (keep <= 6; 4 physical wings). Specialise INSIDE a department via the worker engine, not by adding departments.
+frontend: { name: Frontend,       preferred_bay: NE, hue: 205, capability: "UI code, components, styles",    worker_kind: code,     lead_alias: lead, worker_alias: fast,     weight: 1.0 }
+backend:  { name: Backend,        preferred_bay: NW, hue: 150, capability: "APIs, services, CLI, core logic", worker_kind: code,     lead_alias: lead, worker_alias: code,     weight: 1.2 }
+research: { name: Research,       preferred_bay: NW, hue: 58,  capability: "SearXNG-grounded gathering",      worker_kind: search,   lead_alias: lead, worker_alias: research, weight: 1.0 }
+data:     { name: "Data & Evals", preferred_bay: SW, hue: 262, capability: "benchmarks, metrics, validation", worker_kind: script,   lead_alias: lead, worker_alias: qa,       weight: 0.8 }
+qa:       { name: QA,             preferred_bay: SW, hue: 300, capability: "test runs, validation gates",     worker_kind: validate, lead_alias: lead, worker_alias: qa,       weight: 0.6 }
+content:  { name: "Content & Docs", preferred_bay: SE, hue: 20, capability: "synthesis, README, report",       worker_kind: llm,      lead_alias: lead, worker_alias: text,     weight: 0.8 }

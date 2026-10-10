@@ -1,0 +1,1 @@
+Add a function `add(a: int, b: int) -> int` to math_utils.py that returns the sum of a and b, and add a test test_add() in test_math.py that asserts add(2, 3) == 5.

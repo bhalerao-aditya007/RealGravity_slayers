@@ -1,0 +1,31 @@
+# RealGravity (PAG) Versions Lock
+# Updated: 2026-10-03
+OPENCODE_VERSION=2.0.22
+OPENCODE_BINARY_SOURCE=npm/@opencode/cli/2.0.22
+PAG_CTX_TIER=3
+CONTEXT_CAP=128000
+
+# Default models (all free tier)
+DEFAULT_BUILD_MODEL=groq/llama-3.3-70b-versatile
+DEFAULT_PLAN_MODEL=groq/llama-3.3-70b-versatile
+DEFAULT_EXPLORE_MODEL=groq/llama-3.1-8b-instant
+
+# Providers configured (all free, no paid services)
+PROVIDERS=groq,nvidia,openrouter,go,go-anthropic
+
+# Resource optimization
+AGENT_MEM_LIMIT=2g
+LLMPROXY_MEM_LIMIT=128m
+EGRESS_MEM_LIMIT=128m
+SEARXNG_MEM_LIMIT=256m
+
+DEVIATIONS=
+- Target OS: Windows WSL2 Ubuntu (systemd-enabled native Docker 29.1.3 + compose v2.40.3)
+- Storage directed to /mnt/d/Realgravity to preserve C: drive capacity
+- Agent memory reduced from 6g to 2g for low-resource PC
+- Added rate limiting (30 req/min) to nginx proxy
+- SearXNG secret moved from settings.yml to .env
+- Fixed launcher hardcoded-index security bug (now dynamically finds deny block)
+- Fixed context plugin double-mask bug (stored replacements instead of recomputing)
+- Added bare-form deny policies for git push and git reset --hard
+- Added NVIDIA NIM, Groq, OpenRouter free-tier providers

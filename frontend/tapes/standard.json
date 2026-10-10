@@ -1,0 +1,1845 @@
+{
+ "goal": "Add dark mode to the dashboard",
+ "events": [
+  {
+   "seq": 1,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:00",
+   "type": "task.created",
+   "payload": {
+    "goal": "Add dark mode to the dashboard"
+   }
+  },
+  {
+   "seq": 2,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:00",
+   "type": "task.triaged",
+   "payload": {
+    "task_class": "code_frontend",
+    "intensity": "standard",
+    "est_effort_s": 3600,
+    "est_workers": 3,
+    "rationale": "Focused task — a small team, no meal breaks needed.",
+    "break_policy": {
+     "coffee": "on_compaction",
+     "meals": false,
+     "chats": "on_handoff",
+     "pace": "normal"
+    },
+    "departments": [
+     {
+      "id": "frontend",
+      "name": "Frontend",
+      "bay": "NE",
+      "capability": "UI code, components, styles",
+      "lead_model": "openrouter/qwen/qwen3.8-27b:free",
+      "worker_model": "groq/openai/gpt-oss-20b",
+      "est_workers": 2,
+      "hue": 205
+     },
+     {
+      "id": "qa",
+      "name": "QA",
+      "bay": "SW",
+      "capability": "test runs, validation gates",
+      "lead_model": "openrouter/nvidia/nemotron-3.5-lightning:free",
+      "worker_model": "nvidia/deepseek-ai/deepseek-v4.1-flash",
+      "est_workers": 1,
+      "hue": 300
+     }
+    ]
+   }
+  },
+  {
+   "seq": 3,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:00",
+   "type": "sandbox.mode",
+   "payload": {
+    "mode": "native"
+   }
+  },
+  {
+   "seq": 4,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:00",
+   "type": "worker.hired",
+   "agent_id": "M0",
+   "payload": {
+    "agent": {
+     "id": "M0",
+     "name": "Diya",
+     "role": "manager",
+     "department": null,
+     "parent_id": null,
+     "engine": {
+      "kind": "llm",
+      "label": "llm:gemma-4-31b-it (manager)"
+     },
+     "avatar_seed": 1,
+     "chairId": "execChair_198",
+     "status": "ASSIGNED",
+     "energy": 100,
+     "context_tokens": 0,
+     "context_max": 32768,
+     "current_task_id": null
+    },
+    "desk": {
+     "x": 1,
+     "z": -23.6
+    }
+   }
+  },
+  {
+   "seq": 5,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:00",
+   "type": "plan.ready",
+   "payload": {
+    "nodes": [
+     {
+      "id": "T1",
+      "parent_id": "M0",
+      "description": "Survey the landscape and gather inputs",
+      "owner_role": "frontend",
+      "assigned_agent": "W_frontend_0",
+      "status": "pending",
+      "priority": 2,
+      "depends_on": [],
+      "attempts": 0,
+      "progress_pct": 0,
+      "est_effort_s": 1800
+     },
+     {
+      "id": "T2",
+      "parent_id": null,
+      "description": "Deep-dive component A",
+      "owner_role": "frontend",
+      "assigned_agent": "W_frontend_1",
+      "status": "pending",
+      "priority": 2,
+      "depends_on": [
+       "T1"
+      ],
+      "attempts": 0,
+      "progress_pct": 0,
+      "est_effort_s": 1800
+     },
+     {
+      "id": "T3",
+      "parent_id": null,
+      "description": "Deep-dive component B",
+      "owner_role": "qa",
+      "assigned_agent": "W_qa_0",
+      "status": "pending",
+      "priority": 2,
+      "depends_on": [
+       "T1"
+      ],
+      "attempts": 0,
+      "progress_pct": 0,
+      "est_effort_s": 1800
+     },
+     {
+      "id": "T4",
+      "parent_id": null,
+      "description": "Design the architecture",
+      "owner_role": "frontend",
+      "assigned_agent": "W_frontend_0",
+      "status": "pending",
+      "priority": 2,
+      "depends_on": [
+       "T1"
+      ],
+      "attempts": 0,
+      "progress_pct": 0,
+      "est_effort_s": 1800
+     },
+     {
+      "id": "T5",
+      "parent_id": null,
+      "description": "Implement the core module",
+      "owner_role": "frontend",
+      "assigned_agent": "W_frontend_1",
+      "status": "pending",
+      "priority": 2,
+      "depends_on": [
+       "T2"
+      ],
+      "attempts": 0,
+      "progress_pct": 0,
+      "est_effort_s": 1800
+     }
+    ],
+    "edges": [
+     {
+      "from": "T1",
+      "to": "T2"
+     },
+     {
+      "from": "T1",
+      "to": "T3"
+     },
+     {
+      "from": "T1",
+      "to": "T4"
+     },
+     {
+      "from": "T2",
+      "to": "T5"
+     }
+    ],
+    "plan_meta": {
+     "intensity": "standard",
+     "break_policy": {
+      "coffee": "on_compaction",
+      "meals": false,
+      "chats": "on_handoff",
+      "pace": "normal"
+     },
+     "est_effort_s": 3600
+    }
+   }
+  },
+  {
+   "seq": 6,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:00",
+   "type": "gate.state",
+   "payload": {
+    "in_flight": 0,
+    "limit": 4,
+    "queue_depth": 0,
+    "backoff_active": false
+   }
+  },
+  {
+   "seq": 7,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:00",
+   "type": "run.checkpoint",
+   "payload": {
+    "branch": "agent/20261004-090000",
+    "start_commit": "3f9c2ab71d0e4c5a8b6f1234567890abcdef1234"
+   }
+  },
+  {
+   "seq": 8,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:01",
+   "type": "worker.hired",
+   "agent_id": "L_frontend",
+   "payload": {
+    "agent": {
+     "id": "L_frontend",
+     "name": "Aanya",
+     "role": "lead",
+     "department": "frontend",
+     "parent_id": "M0",
+     "engine": {
+      "kind": "llm",
+      "label": "llm:qwen3.8-27b:free"
+     },
+     "avatar_seed": 10,
+     "chairId": "wchair_90",
+     "status": "ASSIGNED",
+     "energy": 100,
+     "context_tokens": 0,
+     "context_max": 32768,
+     "current_task_id": null
+    },
+    "desk": {
+     "x": 37.75,
+     "z": -8.5
+    }
+   }
+  },
+  {
+   "seq": 9,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:01",
+   "type": "worker.hired",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent": {
+     "id": "W_frontend_0",
+     "name": "Rohan",
+     "role": "worker",
+     "department": "frontend",
+     "parent_id": "L_frontend",
+     "engine": {
+      "kind": "code",
+      "label": "code:gpt-oss-20b"
+     },
+     "avatar_seed": 11,
+     "chairId": "wchair_49",
+     "status": "ASSIGNED",
+     "energy": 100,
+     "context_tokens": 0,
+     "context_max": 32768,
+     "current_task_id": null
+    },
+    "desk": {
+     "x": 28.7,
+     "z": -8.34
+    }
+   }
+  },
+  {
+   "seq": 10,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:02",
+   "type": "worker.hired",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent": {
+     "id": "W_frontend_1",
+     "name": "Meera",
+     "role": "worker",
+     "department": "frontend",
+     "parent_id": "L_frontend",
+     "engine": {
+      "kind": "code",
+      "label": "code:gpt-oss-20b"
+     },
+     "avatar_seed": 12,
+     "chairId": "wchair_52",
+     "status": "ASSIGNED",
+     "energy": 100,
+     "context_tokens": 0,
+     "context_max": 32768,
+     "current_task_id": null
+    },
+    "desk": {
+     "x": 31,
+     "z": -8.34
+    }
+   }
+  },
+  {
+   "seq": 11,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:03",
+   "type": "worker.hired",
+   "agent_id": "L_qa",
+   "payload": {
+    "agent": {
+     "id": "L_qa",
+     "name": "Kabir",
+     "role": "lead",
+     "department": "qa",
+     "parent_id": "M0",
+     "engine": {
+      "kind": "llm",
+      "label": "llm:nemotron-3.5-lightning:free"
+     },
+     "avatar_seed": 13,
+     "chairId": "wchair_138",
+     "status": "ASSIGNED",
+     "energy": 100,
+     "context_tokens": 0,
+     "context_max": 32768,
+     "current_task_id": null
+    },
+    "desk": {
+     "x": -40.25,
+     "z": 29.5
+    }
+   }
+  },
+  {
+   "seq": 12,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:04",
+   "type": "worker.hired",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "agent": {
+     "id": "W_qa_0",
+     "name": "Isha",
+     "role": "worker",
+     "department": "qa",
+     "parent_id": "L_qa",
+     "engine": {
+      "kind": "llm",
+      "label": "llm:deepseek-v4.1-flash"
+     },
+     "avatar_seed": 14,
+     "chairId": "wchair_101",
+     "status": "ASSIGNED",
+     "energy": 100,
+     "context_tokens": 0,
+     "context_max": 32768,
+     "current_task_id": null
+    },
+    "desk": {
+     "x": -34.3,
+     "z": 29.66
+    }
+   }
+  },
+  {
+   "seq": 13,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:05",
+   "type": "message.sent",
+   "agent_id": "M0",
+   "payload": {
+    "from_agent_id": "M0",
+    "to_agent_id": "L_frontend",
+    "kind": "task",
+    "preview": "Plan is on the whiteboard — take your branch."
+   }
+  },
+  {
+   "seq": 14,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:05",
+   "type": "message.sent",
+   "agent_id": "M0",
+   "payload": {
+    "from_agent_id": "M0",
+    "to_agent_id": "L_qa",
+    "kind": "task",
+    "preview": "Plan is on the whiteboard — take your branch."
+   }
+  },
+  {
+   "seq": 15,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:18",
+   "type": "agent.state_changed",
+   "agent_id": "L_qa",
+   "payload": {
+    "agent_id": "L_qa",
+    "from": "WORKING",
+    "to": "WAITING",
+    "reason": "Blocked by T2, T3"
+   }
+  },
+  {
+   "seq": 16,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:17",
+   "type": "task.assigned",
+   "agent_id": "W_frontend_0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "agent_id": "W_frontend_0",
+    "from_agent_id": "L_frontend"
+   }
+  },
+  {
+   "seq": 17,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:18",
+   "type": "task.started",
+   "agent_id": "W_frontend_0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "agent_id": "W_frontend_0"
+   }
+  },
+  {
+   "seq": 18,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:18",
+   "type": "agent.state_changed",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "from": "ASSIGNED",
+    "to": "WORKING"
+   }
+  },
+  {
+   "seq": 19,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:19",
+   "type": "permission.requested",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "request_id": "perm_T1",
+    "agent_id": "W_frontend_0",
+    "agent_name": "Rohan",
+    "action": "shell",
+    "resource": "pip install pytest",
+    "effect": "ask"
+   }
+  },
+  {
+   "seq": 20,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:19",
+   "type": "llm.call_started",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "call_id": "c_T1",
+    "agent_id": "W_frontend_0",
+    "model": "groq/openai/gpt-oss-20b",
+    "role": "worker"
+   }
+  },
+  {
+   "seq": 21,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:19",
+   "type": "gate.state",
+   "payload": {
+    "in_flight": 1,
+    "limit": 4,
+    "queue_depth": 0,
+    "backoff_active": false
+   }
+  },
+  {
+   "seq": 22,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:20",
+   "type": "task.progress",
+   "agent_id": "W_frontend_0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "pct": 30
+   }
+  },
+  {
+   "seq": 23,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:21",
+   "type": "task.progress",
+   "agent_id": "W_frontend_0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "pct": 65
+   }
+  },
+  {
+   "seq": 24,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:22",
+   "type": "task.progress",
+   "agent_id": "W_frontend_0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "pct": 90
+   }
+  },
+  {
+   "seq": 25,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:20",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "kind": "terminal",
+    "data": "rg -n \"def run\" src/"
+   }
+  },
+  {
+   "seq": 26,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:21",
+   "type": "file.edit",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "path": "src/frontend/module_0.py",
+    "line_ranges": [
+     [
+      1,
+      42
+     ],
+     [
+      88,
+      96
+     ]
+    ],
+    "branch": "agent/20261004-090000"
+   }
+  },
+  {
+   "seq": 27,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:21",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "kind": "file_edit",
+    "data": "src/frontend/module_0.py +42"
+   }
+  },
+  {
+   "seq": 28,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:22",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "kind": "test",
+    "data": "PASS test_module_0.py (5 tests)"
+   }
+  },
+  {
+   "seq": 29,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:23",
+   "type": "llm.call_finished",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "call_id": "c_T1",
+    "tokens_in": 12000,
+    "tokens_out": 3200,
+    "latency_ms": 21000
+   }
+  },
+  {
+   "seq": 30,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:23",
+   "type": "task.completed",
+   "agent_id": "W_frontend_0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "result_preview": "T1 findings ready."
+   }
+  },
+  {
+   "seq": 31,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:23",
+   "type": "validation.passed",
+   "agent_id": "W_frontend_0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "validator": "cross-check"
+   }
+  },
+  {
+   "seq": 32,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:23",
+   "type": "message.sent",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "from_agent_id": "W_frontend_0",
+    "to_agent_id": "M0",
+    "kind": "result",
+    "preview": "T1 complete."
+   }
+  },
+  {
+   "seq": 33,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:22",
+   "type": "context.stage_changed",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "stage": 0,
+    "frac": 0.25
+   }
+  },
+  {
+   "seq": 34,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:22",
+   "type": "agent.metrics",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "energy": 75,
+    "context_tokens": 2000,
+    "context_max": 8000,
+    "pending": 1,
+    "done": 0,
+    "failed": 0
+   }
+  },
+  {
+   "seq": 35,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:26",
+   "type": "task.assigned",
+   "agent_id": "W_frontend_1",
+   "task_id": "T2",
+   "payload": {
+    "task_id": "T2",
+    "agent_id": "W_frontend_1",
+    "from_agent_id": "L_frontend"
+   }
+  },
+  {
+   "seq": 36,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:27",
+   "type": "task.started",
+   "agent_id": "W_frontend_1",
+   "task_id": "T2",
+   "payload": {
+    "task_id": "T2",
+    "agent_id": "W_frontend_1"
+   }
+  },
+  {
+   "seq": 37,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:27",
+   "type": "agent.state_changed",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "from": "ASSIGNED",
+    "to": "WORKING"
+   }
+  },
+  {
+   "seq": 38,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:28",
+   "type": "llm.call_started",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "call_id": "c_T2",
+    "agent_id": "W_frontend_1",
+    "model": "groq/openai/gpt-oss-20b",
+    "role": "worker"
+   }
+  },
+  {
+   "seq": 39,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:28",
+   "type": "gate.state",
+   "payload": {
+    "in_flight": 2,
+    "limit": 4,
+    "queue_depth": 1,
+    "backoff_active": false
+   }
+  },
+  {
+   "seq": 40,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:29",
+   "type": "task.progress",
+   "agent_id": "W_frontend_1",
+   "task_id": "T2",
+   "payload": {
+    "task_id": "T2",
+    "pct": 30
+   }
+  },
+  {
+   "seq": 41,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:30",
+   "type": "task.progress",
+   "agent_id": "W_frontend_1",
+   "task_id": "T2",
+   "payload": {
+    "task_id": "T2",
+    "pct": 65
+   }
+  },
+  {
+   "seq": 42,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:31",
+   "type": "task.progress",
+   "agent_id": "W_frontend_1",
+   "task_id": "T2",
+   "payload": {
+    "task_id": "T2",
+    "pct": 90
+   }
+  },
+  {
+   "seq": 43,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:29",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "kind": "terminal",
+    "data": "rg -n \"def run\" src/"
+   }
+  },
+  {
+   "seq": 44,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:30",
+   "type": "file.edit",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "path": "src/frontend/module_1.py",
+    "line_ranges": [
+     [
+      1,
+      43
+     ],
+     [
+      88,
+      96
+     ]
+    ],
+    "branch": "agent/20261004-090000"
+   }
+  },
+  {
+   "seq": 45,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:30",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "kind": "file_edit",
+    "data": "src/frontend/module_1.py +43"
+   }
+  },
+  {
+   "seq": 46,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:31",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "kind": "test",
+    "data": "PASS test_module_1.py (6 tests)"
+   }
+  },
+  {
+   "seq": 47,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:32",
+   "type": "llm.call_finished",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "call_id": "c_T2",
+    "tokens_in": 12800,
+    "tokens_out": 3500,
+    "latency_ms": 21000
+   }
+  },
+  {
+   "seq": 48,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:32",
+   "type": "task.completed",
+   "agent_id": "W_frontend_1",
+   "task_id": "T2",
+   "payload": {
+    "task_id": "T2",
+    "result_preview": "T2 findings ready."
+   }
+  },
+  {
+   "seq": 49,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:32",
+   "type": "validation.passed",
+   "agent_id": "W_frontend_1",
+   "task_id": "T2",
+   "payload": {
+    "task_id": "T2",
+    "validator": "cross-check"
+   }
+  },
+  {
+   "seq": 50,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:32",
+   "type": "message.sent",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "from_agent_id": "W_frontend_1",
+    "to_agent_id": "M0",
+    "kind": "result",
+    "preview": "T2 complete."
+   }
+  },
+  {
+   "seq": 51,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:31",
+   "type": "context.stage_changed",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "stage": 0,
+    "frac": 0.33999999999999997
+   }
+  },
+  {
+   "seq": 52,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:31",
+   "type": "agent.metrics",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "energy": 66,
+    "context_tokens": 2720,
+    "context_max": 8000,
+    "pending": 1,
+    "done": 1,
+    "failed": 0
+   }
+  },
+  {
+   "seq": 53,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:35",
+   "type": "task.assigned",
+   "agent_id": "W_qa_0",
+   "task_id": "T3",
+   "payload": {
+    "task_id": "T3",
+    "agent_id": "W_qa_0",
+    "from_agent_id": "L_qa"
+   }
+  },
+  {
+   "seq": 54,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:36",
+   "type": "task.started",
+   "agent_id": "W_qa_0",
+   "task_id": "T3",
+   "payload": {
+    "task_id": "T3",
+    "agent_id": "W_qa_0"
+   }
+  },
+  {
+   "seq": 55,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:36",
+   "type": "agent.state_changed",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "agent_id": "W_qa_0",
+    "from": "ASSIGNED",
+    "to": "WORKING"
+   }
+  },
+  {
+   "seq": 56,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:37",
+   "type": "llm.call_started",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "call_id": "c_T3",
+    "agent_id": "W_qa_0",
+    "model": "nvidia/deepseek-ai/deepseek-v4.1-flash",
+    "role": "worker"
+   }
+  },
+  {
+   "seq": 57,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:37",
+   "type": "gate.state",
+   "payload": {
+    "in_flight": 3,
+    "limit": 4,
+    "queue_depth": 2,
+    "backoff_active": false
+   }
+  },
+  {
+   "seq": 58,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:38",
+   "type": "task.progress",
+   "agent_id": "W_qa_0",
+   "task_id": "T3",
+   "payload": {
+    "task_id": "T3",
+    "pct": 30
+   }
+  },
+  {
+   "seq": 59,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:39",
+   "type": "task.progress",
+   "agent_id": "W_qa_0",
+   "task_id": "T3",
+   "payload": {
+    "task_id": "T3",
+    "pct": 65
+   }
+  },
+  {
+   "seq": 60,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:40",
+   "type": "task.progress",
+   "agent_id": "W_qa_0",
+   "task_id": "T3",
+   "payload": {
+    "task_id": "T3",
+    "pct": 90
+   }
+  },
+  {
+   "seq": 61,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:41",
+   "type": "llm.call_finished",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "call_id": "c_T3",
+    "tokens_in": 13600,
+    "tokens_out": 3800,
+    "latency_ms": 21000
+   }
+  },
+  {
+   "seq": 62,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:41",
+   "type": "task.completed",
+   "agent_id": "W_qa_0",
+   "task_id": "T3",
+   "payload": {
+    "task_id": "T3",
+    "result_preview": "T3 findings ready."
+   }
+  },
+  {
+   "seq": 63,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:41",
+   "type": "validation.passed",
+   "agent_id": "W_qa_0",
+   "task_id": "T3",
+   "payload": {
+    "task_id": "T3",
+    "validator": "cross-check"
+   }
+  },
+  {
+   "seq": 64,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:41",
+   "type": "message.sent",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "from_agent_id": "W_qa_0",
+    "to_agent_id": "M0",
+    "kind": "result",
+    "preview": "T3 complete."
+   }
+  },
+  {
+   "seq": 65,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:40",
+   "type": "context.stage_changed",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "agent_id": "W_qa_0",
+    "stage": 1,
+    "frac": 0.43
+   }
+  },
+  {
+   "seq": 66,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:40",
+   "type": "agent.metrics",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "agent_id": "W_qa_0",
+    "energy": 57,
+    "context_tokens": 55040,
+    "context_max": 128000,
+    "pending": 1,
+    "done": 2,
+    "failed": 0
+   }
+  },
+  {
+   "seq": 67,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:42",
+   "type": "agent.chat",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "agent_id": "W_qa_0",
+    "with_agent_id": "W_frontend_0",
+    "duration_ms": 5500,
+    "line": "Handing over T3 — watch the test suite."
+   }
+  },
+  {
+   "seq": 68,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:43",
+   "type": "blackboard.note",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "id": "note_T3",
+    "author_agent_id": "W_qa_0",
+    "topic": "handoff",
+    "note": "T3: tests must stay green; no API changes.",
+    "ts": "--:--"
+   }
+  },
+  {
+   "seq": 69,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:41",
+   "type": "agent.state_changed",
+   "agent_id": "L_qa",
+   "payload": {
+    "agent_id": "L_qa",
+    "from": "WAITING",
+    "to": "WORKING",
+    "reason": "Dependencies satisfied"
+   }
+  },
+  {
+   "seq": 70,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:44",
+   "type": "task.assigned",
+   "agent_id": "W_frontend_0",
+   "task_id": "T4",
+   "payload": {
+    "task_id": "T4",
+    "agent_id": "W_frontend_0",
+    "from_agent_id": "L_frontend"
+   }
+  },
+  {
+   "seq": 71,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:45",
+   "type": "task.started",
+   "agent_id": "W_frontend_0",
+   "task_id": "T4",
+   "payload": {
+    "task_id": "T4",
+    "agent_id": "W_frontend_0"
+   }
+  },
+  {
+   "seq": 72,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:45",
+   "type": "agent.state_changed",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "from": "ASSIGNED",
+    "to": "WORKING"
+   }
+  },
+  {
+   "seq": 73,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:46",
+   "type": "llm.call_started",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "call_id": "c_T4",
+    "agent_id": "W_frontend_0",
+    "model": "groq/openai/gpt-oss-20b",
+    "role": "worker"
+   }
+  },
+  {
+   "seq": 74,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:46",
+   "type": "gate.state",
+   "payload": {
+    "in_flight": 4,
+    "limit": 4,
+    "queue_depth": 0,
+    "backoff_active": false
+   }
+  },
+  {
+   "seq": 75,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:47",
+   "type": "task.progress",
+   "agent_id": "W_frontend_0",
+   "task_id": "T4",
+   "payload": {
+    "task_id": "T4",
+    "pct": 30
+   }
+  },
+  {
+   "seq": 76,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:48",
+   "type": "task.progress",
+   "agent_id": "W_frontend_0",
+   "task_id": "T4",
+   "payload": {
+    "task_id": "T4",
+    "pct": 65
+   }
+  },
+  {
+   "seq": 77,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:49",
+   "type": "task.progress",
+   "agent_id": "W_frontend_0",
+   "task_id": "T4",
+   "payload": {
+    "task_id": "T4",
+    "pct": 90
+   }
+  },
+  {
+   "seq": 78,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:47",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "kind": "terminal",
+    "data": "rg -n \"def run\" src/"
+   }
+  },
+  {
+   "seq": 79,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:48",
+   "type": "file.edit",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "path": "src/frontend/module_3.py",
+    "line_ranges": [
+     [
+      1,
+      45
+     ],
+     [
+      88,
+      96
+     ]
+    ],
+    "branch": "agent/20261004-090000"
+   }
+  },
+  {
+   "seq": 80,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:48",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "kind": "file_edit",
+    "data": "src/frontend/module_3.py +45"
+   }
+  },
+  {
+   "seq": 81,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:49",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "kind": "test",
+    "data": "PASS test_module_3.py (8 tests)"
+   }
+  },
+  {
+   "seq": 82,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:50",
+   "type": "llm.call_finished",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "call_id": "c_T4",
+    "tokens_in": 14400,
+    "tokens_out": 4100,
+    "latency_ms": 21000
+   }
+  },
+  {
+   "seq": 83,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:50",
+   "type": "task.completed",
+   "agent_id": "W_frontend_0",
+   "task_id": "T4",
+   "payload": {
+    "task_id": "T4",
+    "result_preview": "T4 findings ready."
+   }
+  },
+  {
+   "seq": 84,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:50",
+   "type": "validation.passed",
+   "agent_id": "W_frontend_0",
+   "task_id": "T4",
+   "payload": {
+    "task_id": "T4",
+    "validator": "cross-check"
+   }
+  },
+  {
+   "seq": 85,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:50",
+   "type": "message.sent",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "from_agent_id": "W_frontend_0",
+    "to_agent_id": "M0",
+    "kind": "result",
+    "preview": "T4 complete."
+   }
+  },
+  {
+   "seq": 86,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:49",
+   "type": "context.stage_changed",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "stage": 1,
+    "frac": 0.52
+   }
+  },
+  {
+   "seq": 87,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:49",
+   "type": "agent.metrics",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "energy": 48,
+    "context_tokens": 4160,
+    "context_max": 8000,
+    "pending": 1,
+    "done": 3,
+    "failed": 0
+   }
+  },
+  {
+   "seq": 88,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:51",
+   "type": "agent.break_start",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "kind": "coffee",
+    "duration_sim_s": 300
+   }
+  },
+  {
+   "seq": 89,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:51",
+   "type": "agent.state_changed",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "from": "WORKING",
+    "to": "BREAK"
+   }
+  },
+  {
+   "seq": 90,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "10:43",
+   "type": "agent.break_end",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0"
+   }
+  },
+  {
+   "seq": 91,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "10:43",
+   "type": "agent.state_changed",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0",
+    "from": "BREAK",
+    "to": "WORKING"
+   }
+  },
+  {
+   "seq": 92,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:53",
+   "type": "task.assigned",
+   "agent_id": "W_frontend_1",
+   "task_id": "T5",
+   "payload": {
+    "task_id": "T5",
+    "agent_id": "W_frontend_1",
+    "from_agent_id": "L_frontend"
+   }
+  },
+  {
+   "seq": 93,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:54",
+   "type": "task.started",
+   "agent_id": "W_frontend_1",
+   "task_id": "T5",
+   "payload": {
+    "task_id": "T5",
+    "agent_id": "W_frontend_1"
+   }
+  },
+  {
+   "seq": 94,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:54",
+   "type": "agent.state_changed",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "from": "ASSIGNED",
+    "to": "WORKING"
+   }
+  },
+  {
+   "seq": 95,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:55",
+   "type": "llm.call_started",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "call_id": "c_T5",
+    "agent_id": "W_frontend_1",
+    "model": "groq/openai/gpt-oss-20b",
+    "role": "worker"
+   }
+  },
+  {
+   "seq": 96,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:55",
+   "type": "gate.state",
+   "payload": {
+    "in_flight": 1,
+    "limit": 4,
+    "queue_depth": 1,
+    "backoff_active": false
+   }
+  },
+  {
+   "seq": 97,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:56",
+   "type": "task.progress",
+   "agent_id": "W_frontend_1",
+   "task_id": "T5",
+   "payload": {
+    "task_id": "T5",
+    "pct": 30
+   }
+  },
+  {
+   "seq": 98,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:57",
+   "type": "task.progress",
+   "agent_id": "W_frontend_1",
+   "task_id": "T5",
+   "payload": {
+    "task_id": "T5",
+    "pct": 65
+   }
+  },
+  {
+   "seq": 99,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:58",
+   "type": "task.progress",
+   "agent_id": "W_frontend_1",
+   "task_id": "T5",
+   "payload": {
+    "task_id": "T5",
+    "pct": 90
+   }
+  },
+  {
+   "seq": 100,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:56",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "kind": "terminal",
+    "data": "rg -n \"def run\" src/"
+   }
+  },
+  {
+   "seq": 101,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:57",
+   "type": "file.edit",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "path": "src/frontend/module_4.py",
+    "line_ranges": [
+     [
+      1,
+      46
+     ],
+     [
+      88,
+      96
+     ]
+    ],
+    "branch": "agent/20261004-090000"
+   }
+  },
+  {
+   "seq": 102,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:57",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "kind": "file_edit",
+    "data": "src/frontend/module_4.py +46"
+   }
+  },
+  {
+   "seq": 103,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:58",
+   "type": "runtime.stream",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "kind": "test",
+    "data": "PASS test_module_4.py (9 tests)"
+   }
+  },
+  {
+   "seq": 104,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:59",
+   "type": "llm.call_finished",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "call_id": "c_T5",
+    "tokens_in": 15200,
+    "tokens_out": 4400,
+    "latency_ms": 21000
+   }
+  },
+  {
+   "seq": 105,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:59",
+   "type": "task.completed",
+   "agent_id": "W_frontend_1",
+   "task_id": "T5",
+   "payload": {
+    "task_id": "T5",
+    "result_preview": "T5 findings ready."
+   }
+  },
+  {
+   "seq": 106,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:59",
+   "type": "validation.passed",
+   "agent_id": "W_frontend_1",
+   "task_id": "T5",
+   "payload": {
+    "task_id": "T5",
+    "validator": "cross-check"
+   }
+  },
+  {
+   "seq": 107,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:59",
+   "type": "message.sent",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "from_agent_id": "W_frontend_1",
+    "to_agent_id": "M0",
+    "kind": "result",
+    "preview": "T5 complete."
+   }
+  },
+  {
+   "seq": 108,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:58",
+   "type": "context.stage_changed",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "stage": 2,
+    "frac": 0.61
+   }
+  },
+  {
+   "seq": 109,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "09:58",
+   "type": "agent.metrics",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "energy": 39,
+    "context_tokens": 4880,
+    "context_max": 8000,
+    "pending": 1,
+    "done": 4,
+    "failed": 0
+   }
+  },
+  {
+   "seq": 110,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "10:00",
+   "type": "agent.chat",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1",
+    "with_agent_id": "W_qa_0",
+    "duration_ms": 6200,
+    "line": "Handing over T5 — watch the test suite."
+   }
+  },
+  {
+   "seq": 111,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "10:01",
+   "type": "blackboard.note",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "id": "note_T5",
+    "author_agent_id": "W_frontend_1",
+    "topic": "handoff",
+    "note": "T5: tests must stay green; no API changes.",
+    "ts": "--:--"
+   }
+  },
+  {
+   "seq": 112,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "10:03",
+   "type": "result.final",
+   "payload": {
+    "report_markdown": "# Open-Weight Coding Models: Comparison & Benchmark CLI\n\n## Summary\nWe compared the three strongest open-weight coding model families — **Qwen2.5-Coder-32B**, **DeepSeek-Coder-V2-Lite (16B)**, and **StarCoder2-15B** — on HumanEval, MBPP, and a fresh 40-prompt internal suite, then shipped a tiny CLI (`bench`) that runs any of them through a standard harness.\n\n## Findings\n- **Qwen2.5-Coder-32B** leads on HumanEval (86.9% pass@1) and long-context refactor tasks. Apache-2.0 license, 32k context.\n- **DeepSeek-Coder-V2-Lite** is the best quality-per-GB: 81.2% HumanEval at 16B active parameters, MIT license.\n- **StarCoder2-15B** trails on multilingual tasks (65.1%) but is the fastest at batch inference and has the most permissive training-data transparency.\n\n## The CLI\n`bench --model qwen2.5-coder-32b --suite humaneval,mbpp` produces a JSON + Markdown scorecard with tokens/s, cost proxy, and pass@1/pass@5. The harness pins prompts, seeds, and stop tokens for reproducibility.\n\n## Recommendation\nDefault to **Qwen2.5-Coder-32B** where VRAM allows; use **DeepSeek-Coder-V2-Lite** on single-GPU boxes; keep **StarCoder2** for high-throughput batch labeling.\n",
+    "sources": [
+     {
+      "title": "Qwen2.5-Coder technical report",
+      "url": "https://qwenlm.github.io/blog/qwen2.5-coder/",
+      "verified": true
+     },
+     {
+      "title": "DeepSeek-Coder-V2 repository",
+      "url": "https://github.com/deepseek-ai/DeepSeek-Coder-V2",
+      "verified": true
+     },
+     {
+      "title": "StarCoder2 paper (arXiv:2402.19173)",
+      "url": "https://arxiv.org/abs/2402.19173",
+      "verified": true
+     },
+     {
+      "title": "HumanEval benchmark suite",
+      "url": "https://github.com/openai/human-eval",
+      "verified": true
+     },
+     {
+      "title": "Community inference throughput notes",
+      "url": "https://example.com/community-notes",
+      "verified": false
+     }
+    ],
+    "effort_logical_s": 3600,
+    "effort_real_s": 135
+   }
+  },
+  {
+   "seq": 113,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "10:04",
+   "type": "worker.released",
+   "agent_id": "W_frontend_0",
+   "payload": {
+    "agent_id": "W_frontend_0"
+   }
+  },
+  {
+   "seq": 114,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "10:04",
+   "type": "worker.released",
+   "agent_id": "W_frontend_1",
+   "payload": {
+    "agent_id": "W_frontend_1"
+   }
+  },
+  {
+   "seq": 115,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.845Z",
+   "ts_sim": "10:05",
+   "type": "worker.released",
+   "agent_id": "W_qa_0",
+   "payload": {
+    "agent_id": "W_qa_0"
+   }
+  }
+ ]
+}

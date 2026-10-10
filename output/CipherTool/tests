@@ -1,0 +1,345 @@
+src/__init__.py
+```python
+# Empty package initializer for the cipher_tool project.
+```
+
+src/caesar.py
+```python
+import string
+from typing import List, Tuple
+
+__all__ = [
+    "caesar_encrypt",
+    "caesar_decrypt",
+    "caesar_brute_force",
+]
+
+
+def _shift_char(ch: str, shift: int) -> str:
+    """
+    Shift a single alphabetic character by *shift* positions.
+    Upper‑case letters stay upper‑case, lower‑case stay lower‑case.
+    Non‑alphabetic characters are returned unchanged.
+    """
+    if ch.isupper():
+        alphabet = string.ascii_uppercase
+    elif ch.islower():
+        alphabet = string.ascii_lowercase
+    else:
+        return ch
+
+    idx = alphabet.index(ch)
+    shifted_idx = (idx + shift) % 26
+    return alphabet[shifted_idx]
+
+
+def caesar_encrypt(text: str, shift: int) -> str:
+    """
+    Encrypt *text* using a Caesar cipher with the given *shift*.
+
+    Parameters
+    ----------
+    text: str
+        Plain‑text to encrypt.
+    shift: int
+        Number of positions to shift each alphabetic character.
+        Positive values shift forward; negative values shift backward.
+        The shift is normalized to the range 0‑25.
+
+    Returns
+    -------
+    str
+        The encrypted ciphertext, preserving the original case and
+        leaving non‑alphabetic characters untouched.
+
+    Examples
+    --------
+    >>> caesar_encrypt("Hello, World!", 3)
+    'Khoor, Zruog!'
+    >>> caesar_encrypt("abcXYZ", -2)
+    'yzaVWX'
+    """
+    normalized_shift = shift % 26
+    return "".join(_shift_char(ch, normalized_shift) for ch in text)
+
+
+def caesar_decrypt(text: str, shift: int) -> str:
+    """
+    Decrypt *text* that was encrypted with a Caesar cipher using *shift*.
+
+    Parameters
+    ----------
+    text: str
+        Cipher‑text to decrypt.
+    shift: int
+        The shift that was used during encryption.
+
+    Returns
+    -------
+    str
+        The recovered plain‑text.
+
+    Examples
+    --------
+    >>> caesar_decrypt("Khoor, Zruog!", 3)
+    'Hello, World!'
+    """
+    # Decryption is encryption with the negative shift.
+    return caesar_encrypt(text, -shift)
+
+
+def caesar_brute_force(ciphertext: str) -> List[Tuple[int, str]]:
+    """
+    Attempt to recover the original plain‑text by trying all 26 possible shifts.
+
+    Parameters
+    ----------
+    ciphertext: str
+        The text encrypted with an unknown Caesar shift.
+
+    Returns
+    -------
+    List[Tuple[int, str]]
+        A list of ``(shift, plaintext)`` tuples ordered by shift from 0 to 25.
+        The correct shift can be identified by inspection or further analysis.
+    """
+    results: List[Tuple[int, str]] = []
+    for shift in range(26):
+        plaintext = caesar_decrypt(ciphertext, shift)
+        results.append((shift, plaintext))
+    return results
+```
+
+src/vigenere.py
+```python
+import string
+from collections import Counter
+from typing import List, Tuple
+
+__all__ = [
+    "vigenere_encrypt",
+    "vigenere_decrypt",
+    "vigenere_brute_force",
+]
+
+# Approximate English letter frequencies (percentage expressed as a proportion).
+_ENGLISH_FREQ = {
+    "a": 0.08167,
+    "b": 0.01492,
+    "c": 0.02782,
+    "d": 0.04253,
+    "e": 0.12702,
+    "f": 0.02228,
+    "g": 0.02015,
+    "h": 0.06094,
+    "i": 0.06966,
+    "j": 0.00153,
+    "k": 0.00772,
+    "l": 0.04025,
+    "m": 0.02406,
+    "n": 0.06749,
+    "o": 0.07507,
+    "p": 0.01929,
+    "q": 0.00095,
+    "r": 0.05987,
+    "s": 0.06327,
+    "t": 0.09056,
+    "u": 0.02758,
+    "v": 0.00978,
+    "w": 0.02360,
+    "x": 0.00150,
+    "y": 0.01974,
+    "z": 0.00074,
+}
+
+
+def _normalize_key(key: str) -> str:
+    """
+    Normalize a Vigenère key to a lowercase alphabetic string.
+
+    Non‑alphabetic characters are stripped.  If the resulting string is
+    empty, a ValueError is raised.
+
+    Parameters
+    ----------
+    key: str
+        The raw key string.
+
+    Returns
+    -------
+    str
+        Normalized key consisting only of lowercase letters.
+    """
+    cleaned = "".join(ch.lower() for ch in key if ch.isalpha())
+    if not cleaned:
+        raise ValueError("Vigenère key must contain at least one alphabetic character.")
+    return cleaned
+
+
+def _shift_char(ch: str, shift: int) -> str:
+    """
+    Shift a single character by *shift* positions, preserving case.
+    Non‑alphabetic characters are returned unchanged.
+    """
+    if ch.isupper():
+        alphabet = string.ascii_uppercase
+    elif ch.islower():
+        alphabet = string.ascii_lowercase
+    else:
+        return ch
+
+    idx = alphabet.index(ch)
+    shifted_idx = (idx + shift) % 26
+    return alphabet[shifted_idx]
+
+
+def vigenere_encrypt(text: str, key: str) -> str:
+    """
+    Encrypt *text* using the Vigenère cipher with the supplied *key*.
+
+    Parameters
+    ----------
+    text: str
+        Plain‑text to encrypt.
+    key: str
+        Alphabetic key (case‑insensitive). Non‑alphabetic characters are ignored.
+
+    Returns
+    -------
+    str
+        Cipher‑text with original case preserved.
+    """
+    norm_key = _normalize_key(key)
+    result = []
+    key_len = len(norm_key)
+    for i, ch in enumerate(text):
+        if ch.isalpha():
+            shift = ord(norm_key[i % key_len]) - ord("a")
+            result.append(_shift_char(ch, shift))
+        else:
+            result.append(ch)
+    return "".join(result)
+
+
+def vigenere_decrypt(text: str, key: str) -> str:
+    """
+    Decrypt *text* that was encrypted with the Vigenère cipher using *key*.
+
+    Parameters
+    ----------
+    text: str
+        Cipher‑text to decrypt.
+    key: str
+        The key that was used for encryption.
+
+    Returns
+    -------
+    str
+        Recovered plain‑text.
+    """
+    norm_key = _normalize_key(key)
+    result = []
+    key_len = len(norm_key)
+    for i, ch in enumerate(text):
+        if ch.isalpha():
+            shift = -(ord(norm_key[i % key_len]) - ord("a"))
+            result.append(_shift_char(ch, shift))
+        else:
+            result.append(ch)
+    return "".join(result)
+
+
+def _chi_square(text: str) -> float:
+    """
+    Compute the chi‑square statistic for *text* against English letter frequencies.
+    Only alphabetic characters are considered; case is ignored.
+    """
+    filtered = [ch.lower() for ch in text if ch.isalpha()]
+    n = len(filtered)
+    if n == 0:
+        return float("inf")
+    counts = Counter(filtered)
+    chi_sq = 0.0
+    for letter, expected_freq in _ENGLISH_FREQ.items():
+        observed = counts.get(letter, 0)
+        expected = expected_freq * n
+        chi_sq += ((observed - expected) ** 2) / (expected if expected > 0 else 1)
+    return chi_sq
+
+
+def _best_shift_for_slice(slice_text: str) -> int:
+    """
+    For a slice of the ciphertext that corresponds to a single key character,
+    determine the shift (0‑25) that yields the lowest chi‑square statistic.
+    """
+    best_shift = 0
+    best_score = float("inf")
+    for shift in range(26):
+        # Decrypt the slice with the candidate shift.
+        candidate = "".join(_shift_char(ch, -shift) for ch in slice_text)
+        score = _chi_square(candidate)
+        if score < best_score:
+            best_score = score
+            best_shift = shift
+    return best_shift
+
+
+def vigenere_brute_force(ciphertext: str, max_key_len: int = 10) -> List[Tuple[str, str]]:
+    """
+    Attempt to recover the original plain‑text and key using frequency analysis.
+
+    Parameters
+    ----------
+    ciphertext: str
+        Text encrypted with an unknown Vigenère key.
+    max_key_len: int, optional
+        Upper bound for the key length to try. Defaults to 10.
+
+    Returns
+    -------
+    List[Tuple[str, str]]
+        A list of ``(key, plaintext)`` pairs ordered by increasing chi‑square
+        score (most likely first).  Keys are returned in lowercase.
+    """
+    candidates: List[Tuple[float, str, str]] = []
+
+    for key_len in range(1, max_key_len + 1):
+        # Build the key by analysing each column.
+        key_chars = []
+        for i in range(key_len):
+            slice_text = "".join(
+                ch
+                for idx, ch in enumerate(ciphertext)
+                if ch.isalpha() and (idx % key_len) == i
+            )
+            best_shift = _best_shift_for_slice(slice_text)
+            key_char = chr(ord("a") + best_shift)
+            key_chars.append(key_char)
+        guessed_key = "".join(key_chars)
+        plaintext = vigenere_decrypt(ciphertext, guessed_key)
+        score = _chi_square(plaintext)
+        candidates.append((score, guessed_key, plaintext))
+
+    # Sort by chi‑square score (lower is better) and strip the score.
+    candidates.sort(key=lambda x: x[0])
+    return [(key, plain) for _, key, plain in candidates]
+```
+
+src/main.py
+```python
+import argparse
+import logging
+import sys
+
+from caesar import caesar_encrypt, caesar_decrypt, caesar_brute_force
+from vigenere import (
+    vigenere_encrypt,
+    vigenere_decrypt,
+    vigenere_brute_force,
+)
+
+# ----------------------------------------------------------------------
+# Logging configuration
+# ----------------------------------------------------------------------
+logging.basicConfig(
+    level=logging.INFO,

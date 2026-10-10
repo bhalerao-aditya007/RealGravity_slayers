@@ -1,0 +1,29 @@
+# Model catalogue + role aliases. Never hard-code a model id anywhere else.
+# VERIFY every id on build day with `scripts/verify-models` (provider /models endpoint): free catalogues change.
+# `context` = EFFECTIVE window the gateway enforces (Groq = 8000).
+models:
+  - { id: "openrouter/google/gemma-4-31b-it:free",            provider: openrouter, upstream_id: "google/gemma-4-31b-it:free",            context: 128000 }
+  - { id: "openrouter/qwen/qwen3.8-27b:free",                  provider: openrouter, upstream_id: "qwen/qwen3.8-27b:free",                  context: 128000 }
+  - { id: "openrouter/cohere/north-mini-code:free",            provider: openrouter, upstream_id: "cohere/north-mini-code:free",            context: 32000 }
+  - { id: "openrouter/nvidia/nemotron-3.5-lightning:free",     provider: openrouter, upstream_id: "nvidia/nemotron-3.5-lightning:free",     context: 128000 }
+  - { id: "groq/openai/gpt-oss-120b",                          provider: groq,       upstream_id: "openai/gpt-oss-120b",                    context: 8000 }
+  - { id: "groq/qwen/qwen3.8-27b",                             provider: groq,       upstream_id: "qwen/qwen3.8-27b",                       context: 8000 }
+  - { id: "groq/openai/gpt-oss-20b",                           provider: groq,       upstream_id: "openai/gpt-oss-20b",                     context: 8000 }
+  - { id: "nvidia/llama-3.1-nemotron-70b-instruct",            provider: nvidia,     upstream_id: "nvidia/llama-3.1-nemotron-70b-instruct", context: 128000 }
+  - { id: "nvidia/mistralai/codestral-22b-instruct-v0.1",      provider: nvidia,     upstream_id: "mistralai/codestral-22b-instruct-v0.1",  context: 32000 }
+  - { id: "nvidia/deepseek-ai/deepseek-v4.1-flash",            provider: nvidia,     upstream_id: "deepseek-ai/deepseek-v4.1-flash",        context: 128000 }
+  - { id: "go/deepseek-v4-flash",                              provider: go,         upstream_id: "deepseek-v4-flash",                      context: 128000 }
+  - { id: "go/deepseek-v4-pro",                                provider: go,         upstream_id: "deepseek-v4-pro",                        context: 128000 }
+  - { id: "go/glm-5.3-flash",                                  provider: go,         upstream_id: "glm-5.3-flash",                          context: 128000 }
+
+aliases:                     # first = preferred; the rest are the failover chain (docs/MODEL_ROUTING §2)
+  triage:             ["groq/openai/gpt-oss-20b", "openrouter/nvidia/nemotron-3.5-lightning:free"]
+  manager:            ["openrouter/google/gemma-4-31b-it:free", "nvidia/llama-3.1-nemotron-70b-instruct", "openrouter/qwen/qwen3.8-27b:free", "go/deepseek-v4-pro"]
+  manager_escalation: ["groq/openai/gpt-oss-120b", "openrouter/qwen/qwen3.8-27b:free"]
+  lead:               ["openrouter/qwen/qwen3.8-27b:free", "nvidia/deepseek-ai/deepseek-v4.1-flash", "go/deepseek-v4-flash"]
+  code:               ["nvidia/deepseek-ai/deepseek-v4.1-flash", "openrouter/qwen/qwen3.8-27b:free", "go/deepseek-v4-flash", "nvidia/mistralai/codestral-22b-instruct-v0.1"]
+  fast:               ["groq/openai/gpt-oss-20b", "openrouter/google/gemma-4-31b-it:free"]
+  research:           ["openrouter/google/gemma-4-31b-it:free", "nvidia/llama-3.1-nemotron-70b-instruct"]
+  qa:                 ["openrouter/nvidia/nemotron-3.5-lightning:free", "nvidia/deepseek-ai/deepseek-v4.1-flash"]
+  text:               ["go/glm-5.3-flash", "openrouter/cohere/north-mini-code:free", "openrouter/google/gemma-4-31b-it:free"]
+# Providers whose key is missing are skipped automatically; if that empties a chain, use the single-provider playbooks (docs/MODEL_ROUTING §7).

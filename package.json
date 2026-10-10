@@ -1,0 +1,31 @@
+{
+  "name": "gravitydesk",
+  "version": "1.0.0",
+  "description": "GravityDesk - Unified RealGravity (PAG) autonomous coding agent + Deskmates 3D virtual office multi-agent visualizer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "test": "npm --prefix frontend test",
+    "check": "npm --prefix frontend run check",
+    "bridge:mock": "npm --prefix frontend run bridge:mock",
+    "tape:record": "npm --prefix frontend run tape:record",
+    "layout:export": "npm --prefix frontend run layout:export",
+    "install:frontend": "npm --prefix frontend install",
+    "install:all": "npm --prefix frontend install",
+    "start:all": "powershell -ExecutionPolicy Bypass -File scripts/start-all.ps1"
+  },
+  "keywords": [
+    "gravitydesk",
+    "realgravity",
+    "deskmates",
+    "ai-agents",
+    "threejs",
+    "autonomous-agent",
+    "3d-office"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,95 @@
+swarm:
+  sizes: [10, 20, 30, 40, 50]
+  supervisor:
+    chain: ["mistral/large", "openrouter/qwen/qwen3.8-27b:free", "groq/openai/gpt-oss-120b"]
+    reserve_pct: 15
+    policy: balanced
+  rounds:
+    order: [frame, diverge, cluster, critique, vote, synthesize]
+    max_repair: 3
+    initial_candidates: 3
+    escalate: [3, 6, 10]
+    overhead_allowance: 0.15
+    quorum:
+      frame: 1.0
+      diverge: 0.85
+      cluster: 1.0
+      critique: 0.80
+      vote: 0.80
+      synthesize: 1.0
+    timeouts_x_estimate:
+      soft: 2.0
+      hard: 3.0
+    cluster:
+      tau: 0.55
+      k_max: 8
+      outlier_tray: true
+      steward_every: 10
+    critique:
+      min_critics: 3
+      min_personas: 3
+      min_families: 2
+      no_self_cluster: true
+    vote:
+      top_k: 3
+      anonymize: true
+      shuffle: true
+      early_decision: true
+      reliability_clamp: [0.5, 1.5]
+    synthesize:
+      calls: 4
+      require_coverage: true
+  budgets:
+    run_tokens: 2000000
+    cell_tokens: 150000
+    agent_calls: 40
+    wallclock_min: 90
+  sandbox_slots: 3
+  messaging:
+    max_payload_tokens: 1500
+    max_msgs_per_agent_round: 6
+    fanout: 8
+    max_debate_exchanges: 2
+  diversity:
+    min_families_per_cell: 3
+    temps: [0.2, 0.5, 0.8]
+    min_families_per_persona: 2
+    collapse_threshold: 0.80
+  selection:
+    weights:
+      cross: 0.40
+      cluster: 0.25
+      critic: 0.20
+      prior: 0.10
+    tie_epsilon: 0.03
+  watchdogs:
+    stall_s: 120
+    dup_threshold: 3
+    budget_warn: 0.8
+    tick_s: 2
+  wave:
+    slow_start_fraction: 0.25
+    jitter: 0.10
+    shuffle_each_round: true
+  visuals:
+    wait_to_break_threshold_s: 8
+    coffee_corner_capacity: 12
+    cosmetic_chatter: templated
+
+privacy:
+  default_mode: free_with_redaction
+  restricted_globs:
+    - "**/.env*"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/secrets/**"
+    - "**/*credential*"
+    - "**/id_rsa*"
+  pseudonymize: true
+  egress_allowlist_hosts:
+    - api.groq.com
+    - api.cerebras.ai
+    - integrate.api.nvidia.com
+    - openrouter.ai
+    - api.mistral.ai
+    - generativelanguage.googleapis.com

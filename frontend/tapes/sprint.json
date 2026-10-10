@@ -1,0 +1,245 @@
+{
+ "goal": "Summarize this repo README in one paragraph",
+ "events": [
+  {
+   "seq": 1,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.841Z",
+   "ts_sim": "09:00",
+   "type": "task.created",
+   "payload": {
+    "goal": "Summarize this repo README in one paragraph"
+   }
+  },
+  {
+   "seq": 2,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:00",
+   "type": "task.triaged",
+   "payload": {
+    "task_class": "text_gen",
+    "intensity": "light",
+    "est_effort_s": 240,
+    "est_workers": 0,
+    "rationale": "Short single-output task — I will handle this myself.",
+    "break_policy": {
+     "coffee": "never",
+     "meals": false,
+     "chats": "never",
+     "pace": "sprint"
+    },
+    "departments": []
+   }
+  },
+  {
+   "seq": 3,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:00",
+   "type": "sandbox.mode",
+   "payload": {
+    "mode": "native"
+   }
+  },
+  {
+   "seq": 4,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:00",
+   "type": "worker.hired",
+   "agent_id": "M0",
+   "payload": {
+    "agent": {
+     "id": "M0",
+     "name": "Diya",
+     "role": "manager",
+     "department": null,
+     "parent_id": null,
+     "engine": {
+      "kind": "llm",
+      "label": "llm:gemma-4-31b-it (manager)"
+     },
+     "avatar_seed": 1,
+     "chairId": "execChair_198",
+     "status": "ASSIGNED",
+     "energy": 100,
+     "context_tokens": 0,
+     "context_max": 32768,
+     "current_task_id": null
+    },
+    "desk": {
+     "x": 1,
+     "z": -23.6
+    }
+   }
+  },
+  {
+   "seq": 5,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:00",
+   "type": "task.started",
+   "agent_id": "M0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "agent_id": "M0"
+   }
+  },
+  {
+   "seq": 6,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:00",
+   "type": "plan.ready",
+   "payload": {
+    "nodes": [
+     {
+      "id": "T1",
+      "parent_id": null,
+      "description": "Write the requested output",
+      "owner_role": "manager",
+      "assigned_agent": "M0",
+      "status": "running",
+      "priority": 2,
+      "depends_on": [],
+      "attempts": 0,
+      "progress_pct": 0,
+      "est_effort_s": 240
+     }
+    ],
+    "edges": [],
+    "plan_meta": {
+     "intensity": "light",
+     "break_policy": {
+      "coffee": "never",
+      "meals": false,
+      "chats": "never",
+      "pace": "sprint"
+     },
+     "est_effort_s": 240
+    }
+   }
+  },
+  {
+   "seq": 7,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:00",
+   "type": "agent.state_changed",
+   "agent_id": "M0",
+   "payload": {
+    "agent_id": "M0",
+    "from": "ASSIGNED",
+    "to": "WORKING"
+   }
+  },
+  {
+   "seq": 8,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:01",
+   "type": "llm.call_started",
+   "agent_id": "M0",
+   "payload": {
+    "call_id": "c1",
+    "agent_id": "M0",
+    "model": "groq/openai/gpt-oss-20b",
+    "role": "manager"
+   }
+  },
+  {
+   "seq": 9,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:01",
+   "type": "gate.state",
+   "payload": {
+    "in_flight": 1,
+    "limit": 4,
+    "queue_depth": 0,
+    "backoff_active": false
+   }
+  },
+  {
+   "seq": 10,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:02",
+   "type": "task.progress",
+   "agent_id": "M0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "pct": 45
+   }
+  },
+  {
+   "seq": 11,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:03",
+   "type": "task.progress",
+   "agent_id": "M0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "pct": 90
+   }
+  },
+  {
+   "seq": 12,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:03",
+   "type": "llm.call_finished",
+   "agent_id": "M0",
+   "payload": {
+    "call_id": "c1",
+    "tokens_in": 640,
+    "tokens_out": 890,
+    "latency_ms": 4200
+   }
+  },
+  {
+   "seq": 13,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:03",
+   "type": "gate.state",
+   "payload": {
+    "in_flight": 0,
+    "limit": 4,
+    "queue_depth": 0,
+    "backoff_active": false
+   }
+  },
+  {
+   "seq": 14,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:03",
+   "type": "task.completed",
+   "agent_id": "M0",
+   "task_id": "T1",
+   "payload": {
+    "task_id": "T1",
+    "result_preview": "Draft ready."
+   }
+  },
+  {
+   "seq": 15,
+   "run_id": "run_local",
+   "ts_real": "2026-10-05T11:53:38.842Z",
+   "ts_sim": "09:03",
+   "type": "result.final",
+   "payload": {
+    "report_markdown": "# Quick draft\n\nHere is a short, self-contained draft written directly by the manager — no team was needed for a single-output task.\n\n> RealGravity runs a terminal-first coding agent on free open-weight models, with a permission-gated sandbox, staged context discipline, and one-command rollback.\n",
+    "sources": [],
+    "effort_logical_s": 260,
+    "effort_real_s": 8
+   }
+  }
+ ]
+}

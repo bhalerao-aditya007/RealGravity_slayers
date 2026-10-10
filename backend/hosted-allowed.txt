@@ -1,0 +1,9 @@
+/mnt/d/Realgravity/scratch-repo
+/home/lenovo/pag-scratch
+/mnt/d/Django
+D:\Django
+D:\officeai-master\officeai-master\scratch-repo
+D:\GravityDesk\backend\scratch-repo
+/mnt/d/GravityDesk/backend/scratch-repo
+D:\GravityDesk\scratch-repo
+/mnt/d/GravityDesk/scratch-repo

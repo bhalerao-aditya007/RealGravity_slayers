@@ -1,0 +1,1 @@
+Add input validation to reverse_string in python_pkg/string_utils.py so that if input is not a string, it raises TypeError('Input must be a string'). Add test_reverse_type_error in python_pkg/tests/test_string.py asserting TypeError is raised when passing an integer.

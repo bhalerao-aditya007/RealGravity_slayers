@@ -1,0 +1,258 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200" width="1200" height="200">
+  <defs>
+    <!-- Gradient for background -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d0221;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a0a3e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0d0221;stop-opacity:1" />
+    </linearGradient>
+    <!-- Gradient for title text -->
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff" />
+      <stop offset="30%" style="stop-color:#7b2ff7" />
+      <stop offset="60%" style="stop-color:#c471f5" />
+      <stop offset="100%" style="stop-color:#00d4ff" />
+      <animate attributeName="x1" values="0%;100%;0%" dur="6s" repeatCount="indefinite" />
+      <animate attributeName="x2" values="100%;200%;100%" dur="6s" repeatCount="indefinite" />
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Stronger glow for particles -->
+    <filter id="particleGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Grid pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e1150" stroke-width="0.5" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="200" fill="url(#bgGrad)" rx="12"/>
+  
+  <!-- Grid overlay -->
+  <rect width="1200" height="200" fill="url(#grid)" rx="12" opacity="0.5"/>
+
+  <!-- Animated horizontal scan line -->
+  <rect x="0" y="0" width="1200" height="1" fill="#00d4ff" opacity="0.15">
+    <animate attributeName="y" values="0;200;0" dur="4s" repeatCount="indefinite" />
+  </rect>
+
+  <!-- Floor line -->
+  <line x1="0" y1="165" x2="1200" y2="165" stroke="#1e1150" stroke-width="1" opacity="0.6"/>
+  <line x1="0" y1="166" x2="1200" y2="166" stroke="#7b2ff7" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- ===== WALKING AGENT 1 (left to right, bottom) ===== -->
+  <g opacity="0.85">
+    <animateTransform attributeName="transform" type="translate" values="-60,0;1260,0" dur="18s" repeatCount="indefinite" />
+    <!-- Body -->
+    <rect x="0" y="135" width="14" height="20" rx="4" fill="#7b2ff7" opacity="0.9"/>
+    <!-- Head -->
+    <circle cx="7" cy="130" r="7" fill="#c471f5" opacity="0.9"/>
+    <!-- Eye visor -->
+    <rect x="2" y="128" width="10" height="3" rx="1.5" fill="#00d4ff" opacity="0.8" filter="url(#particleGlow)"/>
+    <!-- Left leg -->
+    <line x1="4" y1="155" x2="1" y2="164" stroke="#7b2ff7" stroke-width="2" stroke-linecap="round">
+      <animate attributeName="x2" values="1;7;1" dur="0.5s" repeatCount="indefinite"/>
+    </line>
+    <!-- Right leg -->
+    <line x1="10" y1="155" x2="13" y2="164" stroke="#7b2ff7" stroke-width="2" stroke-linecap="round">
+      <animate attributeName="x2" values="13;7;13" dur="0.5s" repeatCount="indefinite"/>
+    </line>
+    <!-- Floating laptop -->
+    <rect x="16" y="138" width="10" height="7" rx="1" fill="#1a0a3e" stroke="#00d4ff" stroke-width="0.5" opacity="0.8">
+      <animate attributeName="y" values="138;136;138" dur="1.5s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Screen glow on laptop -->
+    <rect x="17" y="139" width="8" height="4" rx="0.5" fill="#00d4ff" opacity="0.3">
+      <animate attributeName="opacity" values="0.3;0.6;0.3" dur="1s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- ===== WALKING AGENT 2 (right to left, bottom) ===== -->
+  <g opacity="0.7">
+    <animateTransform attributeName="transform" type="translate" values="1260,0;-60,0" dur="22s" repeatCount="indefinite" />
+    <!-- Body -->
+    <rect x="0" y="138" width="12" height="18" rx="3" fill="#00d4ff" opacity="0.8"/>
+    <!-- Head -->
+    <circle cx="6" cy="133" r="6" fill="#48e5c2" opacity="0.8"/>
+    <!-- Eye visor -->
+    <rect x="2" y="131" width="8" height="2.5" rx="1" fill="#fff" opacity="0.7" filter="url(#particleGlow)"/>
+    <!-- Left leg -->
+    <line x1="3" y1="156" x2="0" y2="164" stroke="#00d4ff" stroke-width="2" stroke-linecap="round">
+      <animate attributeName="x2" values="0;6;0" dur="0.45s" repeatCount="indefinite"/>
+    </line>
+    <!-- Right leg -->
+    <line x1="9" y1="156" x2="12" y2="164" stroke="#00d4ff" stroke-width="2" stroke-linecap="round">
+      <animate attributeName="x2" values="12;6;12" dur="0.45s" repeatCount="indefinite"/>
+    </line>
+    <!-- Clipboard -->
+    <rect x="-8" y="140" width="6" height="8" rx="1" fill="#1a0a3e" stroke="#48e5c2" stroke-width="0.5" opacity="0.7">
+      <animate attributeName="y" values="140;138;140" dur="1.2s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- ===== WALKING AGENT 3 (small, faster, left to right) ===== -->
+  <g opacity="0.6">
+    <animateTransform attributeName="transform" type="translate" values="-40,0;1240,0" dur="14s" repeatCount="indefinite" />
+    <!-- Body -->
+    <rect x="0" y="142" width="10" height="15" rx="3" fill="#f472b6" opacity="0.7"/>
+    <!-- Head -->
+    <circle cx="5" cy="138" r="5" fill="#fb923c" opacity="0.7"/>
+    <!-- Eye visor -->
+    <rect x="1.5" y="136.5" width="7" height="2" rx="1" fill="#fff" opacity="0.6" filter="url(#particleGlow)"/>
+    <!-- Left leg -->
+    <line x1="3" y1="157" x2="0" y2="164" stroke="#f472b6" stroke-width="1.5" stroke-linecap="round">
+      <animate attributeName="x2" values="0;5;0" dur="0.35s" repeatCount="indefinite"/>
+    </line>
+    <!-- Right leg -->
+    <line x1="7" y1="157" x2="10" y2="164" stroke="#f472b6" stroke-width="1.5" stroke-linecap="round">
+      <animate attributeName="x2" values="10;5;10" dur="0.35s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- ===== WALKING AGENT 4 (medium, right to left, with wrench) ===== -->
+  <g opacity="0.55">
+    <animateTransform attributeName="transform" type="translate" values="1200,0;-80,0" dur="25s" repeatCount="indefinite" />
+    <!-- Body -->
+    <rect x="0" y="137" width="13" height="19" rx="4" fill="#34d399" opacity="0.75"/>
+    <!-- Head -->
+    <circle cx="6.5" cy="132" r="6.5" fill="#a78bfa" opacity="0.75"/>
+    <!-- Eye visor -->
+    <rect x="2" y="130" width="9" height="2.5" rx="1" fill="#00d4ff" opacity="0.7" filter="url(#particleGlow)"/>
+    <!-- Legs -->
+    <line x1="4" y1="156" x2="1" y2="164" stroke="#34d399" stroke-width="2" stroke-linecap="round">
+      <animate attributeName="x2" values="1;6;1" dur="0.55s" repeatCount="indefinite"/>
+    </line>
+    <line x1="9" y1="156" x2="12" y2="164" stroke="#34d399" stroke-width="2" stroke-linecap="round">
+      <animate attributeName="x2" values="12;6;12" dur="0.55s" repeatCount="indefinite"/>
+    </line>
+    <!-- Floating gear/wrench icon -->
+    <circle cx="-5" cy="140" r="4" fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.6">
+      <animateTransform attributeName="transform" type="rotate" values="0 -5 140;360 -5 140" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- ===== DESK (static, left area) ===== -->
+  <g transform="translate(85, 0)" opacity="0.5">
+    <rect x="0" y="148" width="35" height="16" rx="2" fill="#1e1150" stroke="#7b2ff7" stroke-width="0.5"/>
+    <rect x="3" y="145" width="12" height="8" rx="1" fill="#0d0221" stroke="#00d4ff" stroke-width="0.5"/>
+    <!-- Screen content flicker -->
+    <rect x="4" y="146" width="10" height="5" rx="0.5" fill="#00d4ff" opacity="0.15">
+      <animate attributeName="opacity" values="0.15;0.35;0.15" dur="2s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- ===== DESK (static, right area) ===== -->
+  <g transform="translate(1050, 0)" opacity="0.5">
+    <rect x="0" y="148" width="35" height="16" rx="2" fill="#1e1150" stroke="#7b2ff7" stroke-width="0.5"/>
+    <rect x="20" y="145" width="12" height="8" rx="1" fill="#0d0221" stroke="#c471f5" stroke-width="0.5"/>
+    <rect x="21" y="146" width="10" height="5" rx="0.5" fill="#c471f5" opacity="0.15">
+      <animate attributeName="opacity" values="0.15;0.3;0.15" dur="1.8s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- ===== FLOATING PARTICLES ===== -->
+  <circle cx="100" cy="50" r="1.5" fill="#00d4ff" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="50;30;50" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="300" cy="70" r="1" fill="#c471f5" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="70;45;70" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.9;0.3" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="500" cy="40" r="1.2" fill="#7b2ff7" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="40;20;40" dur="3.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="700" cy="60" r="1" fill="#48e5c2" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="60;35;60" dur="2.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="900" cy="55" r="1.5" fill="#f472b6" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="55;30;55" dur="3.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3.2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1100" cy="45" r="1" fill="#00d4ff" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="45;25;45" dur="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="200" cy="35" r="0.8" fill="#fb923c" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="35;18;35" dur="3.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.2;0.7;0.2" dur="3.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="600" cy="25" r="1.3" fill="#a78bfa" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="25;10;25" dur="4.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4.2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1000" cy="65" r="0.9" fill="#34d399" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="65;40;65" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0.9;0.4" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="400" cy="80" r="1.1" fill="#fff" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="80;55;80" dur="3.6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.2;0.6;0.2" dur="3.6s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="800" cy="75" r="0.7" fill="#00d4ff" filter="url(#particleGlow)">
+    <animate attributeName="cy" values="75;50;75" dur="2.7s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.7s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- ===== NODE CONNECTIONS (floating DAG mini-visual) ===== -->
+  <g transform="translate(850, 15)" opacity="0.3">
+    <circle cx="0" cy="0" r="3" fill="#7b2ff7"/>
+    <circle cx="30" cy="-10" r="3" fill="#00d4ff"/>
+    <circle cx="30" cy="10" r="3" fill="#c471f5"/>
+    <circle cx="60" cy="0" r="3" fill="#48e5c2"/>
+    <line x1="3" y1="0" x2="27" y2="-10" stroke="#7b2ff7" stroke-width="0.5" opacity="0.6"/>
+    <line x1="3" y1="0" x2="27" y2="10" stroke="#7b2ff7" stroke-width="0.5" opacity="0.6"/>
+    <line x1="33" y1="-10" x2="57" y2="0" stroke="#00d4ff" stroke-width="0.5" opacity="0.6"/>
+    <line x1="33" y1="10" x2="57" y2="0" stroke="#c471f5" stroke-width="0.5" opacity="0.6"/>
+    <animateTransform attributeName="transform" type="translate" values="850,15;860,12;850,15" dur="5s" repeatCount="indefinite"/>
+  </g>
+
+  <g transform="translate(150, 20)" opacity="0.25">
+    <circle cx="0" cy="0" r="2.5" fill="#f472b6"/>
+    <circle cx="25" cy="-8" r="2.5" fill="#fb923c"/>
+    <circle cx="25" cy="8" r="2.5" fill="#34d399"/>
+    <line x1="2.5" y1="0" x2="22.5" y2="-8" stroke="#f472b6" stroke-width="0.5" opacity="0.5"/>
+    <line x1="2.5" y1="0" x2="22.5" y2="8" stroke="#f472b6" stroke-width="0.5" opacity="0.5"/>
+    <animateTransform attributeName="transform" type="translate" values="150,20;145,23;150,20" dur="4s" repeatCount="indefinite"/>
+  </g>
+
+  <!-- ===== MAIN TITLE ===== -->
+  <!-- Building emoji -->
+  <text x="600" y="78" font-family="Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif" font-size="38" text-anchor="middle" opacity="0.9">🏢</text>
+
+  <!-- GravityDesk title -->
+  <text x="600" y="115" font-family="'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="52" font-weight="800" letter-spacing="3" text-anchor="middle" fill="url(#titleGrad)" filter="url(#glow)">
+    GravityDesk
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="142" font-family="'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="2.5" text-anchor="middle" fill="#a78bfa" opacity="0.85">
+    MULTI-AGENT SOFTWARE ENGINEERING FLOOR
+  </text>
+
+  <!-- Tagline -->
+  <text x="600" y="158" font-family="'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="10" font-weight="300" letter-spacing="1" text-anchor="middle" fill="#666" opacity="0.7">
+    Every role runs on the open-weight model built for it · Every decision is visible in a live 3D office
+  </text>
+
+  <!-- Animated underline -->
+  <line x1="350" y1="120" x2="350" y2="120" stroke="#00d4ff" stroke-width="1.5" opacity="0.6">
+    <animate attributeName="x2" values="350;850;350" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.2;0.6;0.2" dur="4s" repeatCount="indefinite"/>
+  </line>
+</svg>

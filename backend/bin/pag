@@ -1,0 +1,472 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PAG_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# ──────────────────────────────────────────────
+# Colors for UX
+# ──────────────────────────────────────────────
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
+
+usage() {
+  echo -e "${BOLD}RealGravity (PAG) — Personal Antigravity${NC}"
+  echo ""
+  echo -e "Usage: ${CYAN}pag <project-folder> [profile] [options]${NC}"
+  echo ""
+  echo -e "${BOLD}Profiles:${NC}"
+  echo "  strict   Review every edit and shell command (default for new projects)"
+  echo "  assist   Auto-approve edits, ask for unknown shell commands"
+  echo "  turbo    Auto-approve everything (requires clean git repo)"
+  echo ""
+  echo -e "${BOLD}Options:${NC}"
+  echo "  --allow-hosted        Authorize this project for hosted model access"
+  echo "  --trust-repo-config   Don't mask project opencode.json (use only if you trust it)"
+  echo "  --tier N              Context management tier (0-3, default: 3)"
+  echo "  --model PROVIDER/ID   Override the default model for this session"
+  echo "  --list-models         Show all configured models and exit"
+  echo "  -h, --help            Show this help"
+  echo ""
+  echo -e "${BOLD}Available Providers:${NC}"
+  echo "  groq/*         Groq free tier (fastest inference)"
+  echo "  nvidia/*       NVIDIA NIM free prototyping"
+  echo "  openrouter/*   OpenRouter free models"
+  echo "  go/*           OpenCode Go (free tier)"
+  echo "  go-anthropic/* OpenCode Go (Anthropic protocol)"
+  echo ""
+  echo -e "${BOLD}Examples:${NC}"
+  echo "  pag ~/myproject assist"
+  echo "  pag ~/myproject assist --model nvidia/meta/llama-3.1-70b-instruct"
+  echo "  pag --list-models"
+  exit 0
+}
+
+list_models() {
+  echo -e "${BOLD}RealGravity — Configured Models${NC}"
+  echo ""
+  local profile_file="${PAG_ROOT}/profiles/base.json"
+  if [ ! -f "$profile_file" ]; then
+    echo "[ERROR] base.json not found"
+    exit 1
+  fi
+  # Parse providers and models from base.json
+  jq -r '
+    .providers | to_entries[] |
+    "\(.value.name):" as $header |
+    .key as $prov |
+    $header, (.value.models | to_entries[] |
+      "  \($prov)/\(.key)  — \(.value.name)")
+  ' "$profile_file"
+  echo ""
+  echo -e "Set default: edit ${CYAN}profiles/base.json${NC} → agents.build.model"
+  echo -e "Per-session:  ${CYAN}pag <dir> <profile> --model <provider/model>${NC}"
+  exit 0
+}
+
+if [ $# -lt 1 ]; then
+  usage
+fi
+
+# Check for --list-models before requiring a directory
+if [ "$1" = "--list-models" ]; then
+  list_models
+fi
+
+TARGET_DIR="$1"
+shift
+
+PROFILE="strict"
+ALLOW_HOSTED=false
+TRUST_REPO_CONFIG=false
+PAG_TIER=3
+MODEL_OVERRIDE=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    strict|assist|turbo)
+      PROFILE="$1"
+      shift
+      ;;
+    --allow-hosted)
+      ALLOW_HOSTED=true
+      shift
+      ;;
+    --trust-repo-config)
+      TRUST_REPO_CONFIG=true
+      shift
+      ;;
+    --tier)
+      PAG_TIER="$2"
+      shift 2
+      ;;
+    --model)
+      MODEL_OVERRIDE="$2"
+      shift 2
+      ;;
+    --list-models)
+      list_models
+      ;;
+    -h|--help)
+      usage
+      ;;
+    *)
+      echo -e "${RED}[ERROR] Unknown option: $1${NC}"
+      usage
+      ;;
+  esac
+done
+
+# ──────────────────────────────────────────────
+# 1. Resolve and validate the target folder
+# ──────────────────────────────────────────────
+if [ ! -d "$TARGET_DIR" ]; then
+  echo -e "${RED}[ERROR] Directory does not exist: $TARGET_DIR${NC}"
+  exit 1
+fi
+
+REAL_TARGET="$(cd "$TARGET_DIR" && pwd -P)"
+REAL_HOME="$(cd "$HOME" && pwd -P)"
+
+if [ "$REAL_TARGET" = "/" ] || [ "$REAL_TARGET" = "$REAL_HOME" ] || [[ "$REAL_TARGET" =~ \.ssh ]]; then
+  echo -e "${RED}[SECURITY] Launch refused on sensitive path: $REAL_TARGET${NC}"
+  exit 1
+fi
+
+# ──────────────────────────────────────────────
+# 2. Privacy Gate (G1)
+# ──────────────────────────────────────────────
+HOSTED_FILE="${PAG_ROOT}/hosted-allowed.txt"
+touch "$HOSTED_FILE"
+
+is_allowed=false
+while IFS= read -r line || [ -n "$line" ]; do
+  line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+  [ -z "$line" ] && continue
+  [[ "$line" =~ ^# ]] && continue
+  if [ "$line" = "$REAL_TARGET" ]; then
+    is_allowed=true
+    break
+  fi
+done < "$HOSTED_FILE"
+
+if [ "$is_allowed" = false ]; then
+  if [ "$ALLOW_HOSTED" = true ]; then
+    echo -e "${YELLOW}Authorize sending '${REAL_TARGET}' code to hosted models? (y/N):${NC} "
+    read -r resp
+    if [[ "$resp" =~ ^[Yy]$ ]]; then
+      echo "$REAL_TARGET" >> "$HOSTED_FILE"
+      echo -e "${GREEN}[OK] Added to ${HOSTED_FILE}${NC}"
+    else
+      echo -e "${RED}[ABORTED] Access denied.${NC}"
+      exit 1
+    fi
+  else
+    echo -e "${RED}[PRIVACY GATE] Project '${REAL_TARGET}' is not authorized for hosted models.${NC}"
+    echo -e "Run: ${CYAN}pag \"$TARGET_DIR\" --allow-hosted${NC}"
+    exit 1
+  fi
+fi
+
+# DeepSeek retention warning
+CURRENT_DATE=$(date +%Y-%m-%d)
+if [[ "$CURRENT_DATE" > "2026-10-31" ]]; then
+  echo -e "${YELLOW}[NOTE] Verify DeepSeek retention on the Go privacy page before using DeepSeek on private code.${NC}"
+fi
+
+# ──────────────────────────────────────────────
+# 3. Provider health check
+# ──────────────────────────────────────────────
+ENV_FILE="${PAG_ROOT}/.env"
+if [ ! -f "$ENV_FILE" ]; then
+  echo -e "${RED}[ERROR] No .env file found. Copy the template:${NC}"
+  echo -e "  ${CYAN}cp .env.example .env && chmod 600 .env${NC}"
+  echo -e "  Then add at least one free API key."
+  exit 1
+fi
+
+# Source .env to check which providers are configured
+set +u
+source "$ENV_FILE"
+set -u
+CONFIGURED_PROVIDERS=()
+[ -n "${GO_API_KEY:-}" ]        && CONFIGURED_PROVIDERS+=("go")
+[ -n "${GROQ_API_KEY:-}" ]      && CONFIGURED_PROVIDERS+=("groq")
+[ -n "${NVIDIA_API_KEY:-}" ]    && CONFIGURED_PROVIDERS+=("nvidia")
+[ -n "${OPENROUTER_API_KEY:-}" ] && CONFIGURED_PROVIDERS+=("openrouter")
+
+if [ ${#CONFIGURED_PROVIDERS[@]} -eq 0 ]; then
+  echo -e "${RED}[ERROR] No API keys configured in .env${NC}"
+  echo -e "Add at least one free provider key. See: ${CYAN}.env.example${NC}"
+  exit 1
+fi
+
+echo -e "${GREEN}[OK] Active providers: ${CONFIGURED_PROVIDERS[*]}${NC}"
+
+# Resolve smart model shorthands
+if [ -n "$MODEL_OVERRIDE" ]; then
+  case "$MODEL_OVERRIDE" in
+    groq)
+      MODEL_OVERRIDE="groq/llama-3.3-70b-versatile"
+      ;;
+    nvidia)
+      MODEL_OVERRIDE="nvidia/meta/llama-3.3-70b-instruct"
+      ;;
+    openrouter)
+      MODEL_OVERRIDE="openrouter/qwen/qwen-2.5-coder-32b-instruct:free"
+      ;;
+    go)
+      MODEL_OVERRIDE="go/deepseek-v4-flash"
+      ;;
+    r1|reasoning)
+      MODEL_OVERRIDE="groq/deepseek-r1-distill-llama-70b"
+      ;;
+    coder)
+      MODEL_OVERRIDE="openrouter/qwen/qwen-2.5-coder-32b-instruct:free"
+      ;;
+    fast|instant)
+      MODEL_OVERRIDE="groq/llama-3.1-8b-instant"
+      ;;
+  esac
+  SELECTED_PROVIDER=$(echo "$MODEL_OVERRIDE" | cut -d'/' -f1)
+  PROVIDER_HAS_KEY=false
+  for p in "${CONFIGURED_PROVIDERS[@]}"; do
+    if [ "$p" = "$SELECTED_PROVIDER" ]; then
+      PROVIDER_HAS_KEY=true
+      break
+    fi
+  done
+  if [ "$PROVIDER_HAS_KEY" = false ]; then
+    echo -e "${RED}[ERROR] Provider '${SELECTED_PROVIDER}' has no API key in .env${NC}"
+    exit 1
+  fi
+fi
+
+# ──────────────────────────────────────────────
+# 4. Git init & checkpoint branch
+# ──────────────────────────────────────────────
+cd "$REAL_TARGET"
+if [ ! -d ".git" ]; then
+  echo -e "${CYAN}[INFO] Initializing git in $REAL_TARGET...${NC}"
+  git init -b main >/dev/null 2>&1 || git init >/dev/null 2>&1
+fi
+
+# Ensure git user is configured
+if ! git config user.name >/dev/null 2>&1; then
+  git config user.name "RealGravity Agent"
+  git config user.email "agent@realgravity.local"
+fi
+
+# Turbo clean repo check
+if [ "$PROFILE" = "turbo" ]; then
+  if [ -n "$(git status --porcelain)" ]; then
+    echo -e "${RED}[REFUSED] Turbo mode requires a clean git repository.${NC}"
+    echo "Commit or stash changes first."
+    exit 1
+  fi
+fi
+
+if [ -n "$(git status --porcelain)" ]; then
+  git add -A
+  git commit -m "pag: checkpoint before session" >/dev/null 2>&1 || true
+fi
+
+TS=$(date +%Y%m%d-%H%M%S)
+BRANCH_NAME="agent/${TS}"
+git checkout -b "$BRANCH_NAME" >/dev/null 2>&1
+
+START_COMMIT=$(git rev-parse HEAD 2>/dev/null || echo "HEAD")
+mkdir -p .agent
+echo "$START_COMMIT" > .agent/start
+
+# ──────────────────────────────────────────────
+# 5. Git info exclude
+# ──────────────────────────────────────────────
+mkdir -p .git/info
+if ! grep -q "^\.agent/" .git/info/exclude 2>/dev/null; then
+  echo ".agent/" >> .git/info/exclude
+fi
+if ! grep -q "^\.pag/" .git/info/exclude 2>/dev/null; then
+  echo ".pag/" >> .git/info/exclude
+fi
+
+# ──────────────────────────────────────────────
+# 6. Repo map generation
+# ──────────────────────────────────────────────
+VENV_PYTHON="${PAG_ROOT}/.venv/bin/python3"
+PYTHON_CMD="python3"
+if [ -x "$VENV_PYTHON" ]; then
+  PYTHON_CMD="$VENV_PYTHON"
+fi
+"$PYTHON_CMD" "${PAG_ROOT}/scripts/repo-map.py" "$REAL_TARGET"
+
+# ──────────────────────────────────────────────
+# 7. Generate profiles
+# ──────────────────────────────────────────────
+bash "${PAG_ROOT}/scripts/gen-profiles.sh"
+
+ACTIVE_PROFILE_FILE="${PAG_ROOT}/build/${PROFILE}.json"
+
+# ──────────────────────────────────────────────
+# 8. Project-specific commands (SECURITY FIX)
+#    Dynamically find the deny block instead of
+#    hardcoding an index. Inserts allow rules
+#    BEFORE the first shell deny rule.
+# ──────────────────────────────────────────────
+if [ "$PROFILE" = "assist" ] || [ "$PROFILE" = "turbo" ]; then
+  PROJ_CMDS="${REAL_TARGET}/.pag/commands.txt"
+  if [ -f "$PROJ_CMDS" ]; then
+    echo -e "${CYAN}--- Project custom commands (.pag/commands.txt) ---${NC}"
+    cat "$PROJ_CMDS"
+    echo -ne "${YELLOW}Allow these commands? (y/N): ${NC}"
+    read -r allow_cmds
+    if [[ "$allow_cmds" =~ ^[Yy]$ ]]; then
+      TEMP_PROFILE="${PAG_ROOT}/build/${PROFILE}-custom-${TS}.json"
+      # Build allow rules from commands.txt
+      ALLOW_RULES=$(jq -R -s -c '
+        split("\n") | map(select(length > 0)) |
+        map({
+          action: "shell",
+          resource: (if endswith(" *") then . else . + " *" end),
+          effect: "allow"
+        })
+      ' "$PROJ_CMDS")
+
+      # Insert BEFORE the first "shell" + "deny" rule (safe regardless of rule count)
+      jq --argjson new_rules "$ALLOW_RULES" '
+        .permissions as $perms |
+        # Find index of first shell deny rule
+        ($perms | to_entries | map(select(.value.action == "shell" and .value.effect == "deny")) | .[0].key // ($perms | length)) as $insert_idx |
+        .permissions = ($perms[:$insert_idx] + $new_rules + $perms[$insert_idx:])
+      ' "$ACTIVE_PROFILE_FILE" > "$TEMP_PROFILE"
+      ACTIVE_PROFILE_FILE="$TEMP_PROFILE"
+      echo -e "${GREEN}[OK] Custom commands injected before deny block${NC}"
+    fi
+  fi
+fi
+
+# Apply model override if specified
+if [ -n "$MODEL_OVERRIDE" ]; then
+  OVERRIDE_PROFILE="${PAG_ROOT}/build/${PROFILE}-model-${TS}.json"
+  jq --arg model "$MODEL_OVERRIDE" '
+    .model = $model |
+    .agents.build.model = $model |
+    .agents.plan.model = $model
+  ' "$ACTIVE_PROFILE_FILE" > "$OVERRIDE_PROFILE"
+  ACTIVE_PROFILE_FILE="$OVERRIDE_PROFILE"
+  echo -e "${GREEN}[OK] Model override: ${MODEL_OVERRIDE}${NC}"
+fi
+
+# ──────────────────────────────────────────────
+# 9. Repo-config overlay (R8)
+# ──────────────────────────────────────────────
+OVERRIDE_FLAG=()
+OVERRIDE_FILE="${PAG_ROOT}/build/override-${TS}.yml"
+if [ "$TRUST_REPO_CONFIG" = false ]; then
+  OVERLAYS=()
+  for path in "opencode.json" "opencode.jsonc" ".opencode"; do
+    if [ -e "${REAL_TARGET}/${path}" ]; then
+      OVERLAYS+=("${path}")
+    fi
+  done
+
+  if [ ${#OVERLAYS[@]} -gt 0 ]; then
+    echo -e "${YELLOW}[SECURITY] Masking untrusted repo config: ${OVERLAYS[*]}${NC}"
+    cat <<EOF > "$OVERRIDE_FILE"
+services:
+  agent:
+    volumes:
+EOF
+    for item in "${OVERLAYS[@]}"; do
+      echo "      - /dev/null:/work/${item}:ro" >> "$OVERRIDE_FILE"
+    done
+    OVERRIDE_FLAG=("-f" "${PAG_ROOT}/docker/docker-compose.yml" "-f" "$OVERRIDE_FILE")
+  fi
+fi
+
+if [ ${#OVERRIDE_FLAG[@]} -eq 0 ]; then
+  OVERRIDE_FLAG=("-f" "${PAG_ROOT}/docker/docker-compose.yml")
+fi
+
+# ──────────────────────────────────────────────
+# 10. Start tmux session
+# ──────────────────────────────────────────────
+TMUX_SESSION="pag-${TS}"
+echo ""
+echo -e "${BOLD}╔══════════════════════════════════════════════╗${NC}"
+echo -e "${BOLD}║   RealGravity — Launching Agent Environment  ║${NC}"
+echo -e "${BOLD}╠══════════════════════════════════════════════╣${NC}"
+echo -e "${BOLD}║${NC} Profile:    ${CYAN}${PROFILE}${NC}"
+echo -e "${BOLD}║${NC} Project:    ${CYAN}${REAL_TARGET}${NC}"
+echo -e "${BOLD}║${NC} Branch:     ${CYAN}${BRANCH_NAME}${NC}"
+echo -e "${BOLD}║${NC} Providers:  ${GREEN}${CONFIGURED_PROVIDERS[*]}${NC}"
+if [ -n "$MODEL_OVERRIDE" ]; then
+  echo -e "${BOLD}║${NC} Model:      ${GREEN}${MODEL_OVERRIDE}${NC}"
+fi
+echo -e "${BOLD}╚══════════════════════════════════════════════╝${NC}"
+echo ""
+
+# Export environment variables for compose
+export WORKSPACE="$REAL_TARGET"
+export PROFILE="$PROFILE"
+export PAG_CTX_TIER="$PAG_TIER"
+export COMPOSE_FILE="${PAG_ROOT}/docker/docker-compose.yml"
+
+# Create logs directory
+mkdir -p "${PAG_ROOT}/logs"
+touch "${REAL_TARGET}/.agent/audit.jsonl"
+
+AGENT_RUN_CMD="docker compose ${OVERRIDE_FLAG[*]} run --rm agent"
+
+# Tmux pane setup
+tmux new-session -d -s "$TMUX_SESSION" -n "RealGravity"
+# Pane 1 (Agent TUI)
+tmux send-keys -t "${TMUX_SESSION}:0.0" "cd \"$REAL_TARGET\" && $AGENT_RUN_CMD" C-m
+
+# Pane 2 (Live audit log)
+tmux split-window -h -t "${TMUX_SESSION}:0.0"
+tmux send-keys -t "${TMUX_SESSION}:0.1" "tail -F \"${REAL_TARGET}/.agent/audit.jsonl\" | jq -c '{file,kind,hunks}'" C-m
+
+# Pane 3 (Live diff)
+tmux split-window -v -t "${TMUX_SESSION}:0.1"
+tmux send-keys -t "${TMUX_SESSION}:0.2" "watch -n 2 git -C \"${REAL_TARGET}\" --no-pager diff --stat" C-m
+
+# Focus on agent pane
+tmux select-pane -t "${TMUX_SESSION}:0.0"
+
+# Attach to tmux session
+tmux attach-session -t "$TMUX_SESSION"
+
+# ──────────────────────────────────────────────
+# 11. Session termination & summary
+# ──────────────────────────────────────────────
+echo ""
+echo -e "${BOLD}══════════════════════════════════════════════${NC}"
+echo -e "${BOLD}   RealGravity Session Finished${NC}"
+echo -e "${BOLD}══════════════════════════════════════════════${NC}"
+SUMMARY_FILE="${REAL_TARGET}/.agent/summary-${TS}.txt"
+
+echo -e "${CYAN}Changes since ${START_COMMIT}:${NC}"
+git -C "$REAL_TARGET" diff --stat "$START_COMMIT" || true
+echo ""
+echo -e "${CYAN}Diff detail:${NC}"
+git -C "$REAL_TARGET" diff -U0 "$START_COMMIT" || true
+
+{
+  echo "RealGravity Session Summary: ${TS}"
+  echo "Start Commit: ${START_COMMIT}"
+  echo "Branch: ${BRANCH_NAME}"
+  echo "Profile: ${PROFILE}"
+  echo "Providers: ${CONFIGURED_PROVIDERS[*]}"
+  echo ""
+  git -C "$REAL_TARGET" diff --stat "$START_COMMIT"
+  echo ""
+  git -C "$REAL_TARGET" diff -U0 "$START_COMMIT"
+} > "$SUMMARY_FILE" 2>/dev/null || true
+
+echo ""
+echo -e "Summary: ${CYAN}${SUMMARY_FILE}${NC}"
+echo ""
+echo -e "${GREEN}To KEEP changes:${NC}   git checkout main && git merge ${BRANCH_NAME}"
+echo -e "${RED}To ROLL BACK:${NC}      git checkout main && git branch -D ${BRANCH_NAME}"
+echo -e "${BOLD}══════════════════════════════════════════════${NC}"

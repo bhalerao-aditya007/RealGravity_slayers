@@ -1,0 +1,64 @@
+log_format pag '$time_iso8601 $request_method $uri $status req=$request_length '
+               'res=$bytes_sent t=$upstream_response_time sess=$http_x_opencode_session';
+access_log /var/log/nginx/pag.log pag;
+client_max_body_size 50m;
+
+# --- Rate limiting: 30 req/min per session, burst 10 ---
+limit_req_zone $http_x_opencode_session zone=pag_rate:1m rate=30r/m;
+
+server {
+  listen 8080;
+
+  # Health check endpoint
+  location = /health {
+    return 200 'ok';
+    add_header Content-Type text/plain;
+  }
+
+  # --- OpenCode Go (free tier) ---
+  location /zen/go/v1/ {
+    limit_req zone=pag_rate burst=10 nodelay;
+    proxy_pass https://opencode.ai/zen/go/v1/;
+    proxy_set_header Host opencode.ai;
+    proxy_set_header Authorization "Bearer ${GO_API_KEY}";
+    proxy_set_header x-api-key "${GO_API_KEY}";
+    proxy_ssl_server_name on;
+    proxy_buffering off;
+    proxy_read_timeout 600s;
+  }
+
+  # --- Groq (free tier, fastest inference) ---
+  location /groq/v1/ {
+    limit_req zone=pag_rate burst=10 nodelay;
+    proxy_pass https://api.groq.com/openai/v1/;
+    proxy_set_header Host api.groq.com;
+    proxy_set_header Authorization "Bearer ${GROQ_API_KEY}";
+    proxy_ssl_server_name on;
+    proxy_buffering off;
+    proxy_read_timeout 600s;
+  }
+
+  # --- NVIDIA NIM (free prototyping tier) ---
+  location /nvidia/v1/ {
+    limit_req zone=pag_rate burst=10 nodelay;
+    proxy_pass https://integrate.api.nvidia.com/v1/;
+    proxy_set_header Host integrate.api.nvidia.com;
+    proxy_set_header Authorization "Bearer ${NVIDIA_API_KEY}";
+    proxy_ssl_server_name on;
+    proxy_buffering off;
+    proxy_read_timeout 600s;
+  }
+
+  # --- OpenRouter (free models with :free suffix) ---
+  location /openrouter/v1/ {
+    limit_req zone=pag_rate burst=10 nodelay;
+    proxy_pass https://openrouter.ai/api/v1/;
+    proxy_set_header Host openrouter.ai;
+    proxy_set_header Authorization "Bearer ${OPENROUTER_API_KEY}";
+    proxy_set_header X-Title "RealGravity";
+    proxy_set_header HTTP-Referer "https://github.com/realgravity";
+    proxy_ssl_server_name on;
+    proxy_buffering off;
+    proxy_read_timeout 600s;
+  }
+}

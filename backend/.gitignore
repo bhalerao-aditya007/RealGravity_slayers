@@ -1,0 +1,16 @@
+.env
+build/
+.venv/
+.cache/
+.tmp/
+docker-data/
+containerd-data/
+logs/
+.agent/
+scratch/
+scratch-repo/
+__pycache__/
+*.pyc
+node_modules/
+*.exe
+*.tgz

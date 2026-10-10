@@ -1,0 +1,113 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/qwen/qwen3.8-27b:free",
+  "default_agent": "build",
+  "share": "disabled",
+  "autoupdate": false,
+  "snapshots": true,
+  "compaction": { "auto": true, "keep": { "tokens": 20000 }, "buffer": 20000 },
+  "experimental": {
+    "policies": [
+      { "action": "permission", "resource": "shell:sudo *", "effect": "deny" },
+      { "action": "permission", "resource": "shell:sudo", "effect": "deny" },
+      { "action": "permission", "resource": "shell:git push *", "effect": "deny" },
+      { "action": "permission", "resource": "shell:git push", "effect": "deny" },
+      { "action": "permission", "resource": "shell:ssh *", "effect": "deny" },
+      { "action": "permission", "resource": "shell:ssh", "effect": "deny" },
+      { "action": "permission", "resource": "shell:scp *", "effect": "deny" },
+      { "action": "permission", "resource": "shell:scp", "effect": "deny" },
+      { "action": "permission", "resource": "shell:rm -rf *", "effect": "deny" },
+      { "action": "permission", "resource": "shell:git reset --hard *", "effect": "deny" },
+      { "action": "permission", "resource": "shell:git reset --hard", "effect": "deny" }
+    ]
+  },
+  "providers": {
+    "openrouter": {
+      "name": "OpenRouter (free open-source models with :free tag)",
+      "package": "aisdk:@ai-sdk/openai-compatible",
+      "settings": { "baseURL": "https://openrouter.ai/api/v1", "apiKey": "proxy-managed" },
+      "models": {
+        "qwen/qwen3.8-27b:free": {
+          "modelID": "qwen/qwen3.8-27b:free",
+          "name": "Qwen 3.8 27B (free) — Best free coding model, large context",
+          "capabilities": { "tools": true },
+          "limit": { "context": 128000, "output": 8000 }
+        },
+        "google/gemma-4-31b-it:free": {
+          "modelID": "google/gemma-4-31b-it:free",
+          "name": "Google Gemma 4 31B (free) — Advanced instruction tuned",
+          "capabilities": { "tools": true },
+          "limit": { "context": 128000, "output": 8000 }
+        },
+        "cohere/north-mini-code:free": {
+          "modelID": "cohere/north-mini-code:free",
+          "name": "Cohere North Mini Code (free) — Specialized code completion",
+          "capabilities": { "tools": true },
+          "limit": { "context": 128000, "output": 8000 }
+        },
+        "nvidia/nemotron-3.5-lightning:free": {
+          "modelID": "nvidia/nemotron-3.5-lightning:free",
+          "name": "Nemotron 3.5 Lightning (free) — Fast NVIDIA model",
+          "capabilities": { "tools": true },
+          "limit": { "context": 128000, "output": 8000 }
+        }
+      }
+    },
+    "groq": {
+      "name": "Groq (free tier — ultra-fast LPU inference)",
+      "package": "aisdk:@ai-sdk/openai-compatible",
+      "settings": { "baseURL": "https://api.groq.com/openai/v1", "apiKey": "proxy-managed" },
+      "models": {
+        "openai/gpt-oss-120b": {
+          "modelID": "openai/gpt-oss-120b",
+          "name": "GPT-OSS 120B — Frontier open model (7k ITPM free limit)",
+          "capabilities": { "tools": true },
+          "limit": { "context": 8000, "output": 4000 }
+        },
+        "qwen/qwen3.8-27b": {
+          "modelID": "qwen/qwen3.8-27b",
+          "name": "Qwen 3.8 27B on Groq (7k ITPM free limit)",
+          "capabilities": { "tools": true },
+          "limit": { "context": 8000, "output": 4000 }
+        },
+        "openai/gpt-oss-20b": {
+          "modelID": "openai/gpt-oss-20b",
+          "name": "GPT-OSS 20B — Fast edits",
+          "capabilities": { "tools": true },
+          "limit": { "context": 8000, "output": 4000 }
+        }
+      }
+    },
+    "nvidia": {
+      "name": "NVIDIA NIM (free prototyping)",
+      "package": "aisdk:@ai-sdk/openai-compatible",
+      "settings": { "baseURL": "https://integrate.api.nvidia.com/v1", "apiKey": "proxy-managed" },
+      "models": {
+        "nvidia/llama-3.1-nemotron-70b-instruct": {
+          "modelID": "nvidia/llama-3.1-nemotron-70b-instruct",
+          "name": "Nemotron 70B (NVIDIA) — Alignment & coding",
+          "capabilities": { "tools": true },
+          "limit": { "context": 128000, "output": 8000 }
+        }
+      }
+    },
+    "go": {
+      "name": "OpenCode Go (free tier models)",
+      "package": "aisdk:@ai-sdk/openai-compatible",
+      "settings": { "baseURL": "https://opencode.ai/zen/go/v1", "apiKey": "proxy-managed" },
+      "models": {
+        "deepseek-v4-flash": {
+          "modelID": "deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash — Coding focus",
+          "capabilities": { "tools": true },
+          "limit": { "context": 128000, "output": 16000 }
+        }
+      }
+    }
+  },
+  "agents": {
+    "build":   { "model": "openrouter/qwen/qwen3.8-27b:free" },
+    "plan":    { "model": "openrouter/qwen/qwen3.8-27b:free" },
+    "explore": { "model": "openrouter/qwen/qwen3.8-27b:free" }
+  }
+}

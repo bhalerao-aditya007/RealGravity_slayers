@@ -1,0 +1,4 @@
+/mnt/d/Realgravity/scratch-repo
+/home/lenovo/pag-scratch
+/mnt/d/Django
+D:\Django

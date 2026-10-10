@@ -1,0 +1,34 @@
+[
+  { "action": "*", "resource": "*", "effect": "ask" },
+
+  { "action": "read", "resource": "*", "effect": "allow" },
+  { "action": "read", "resource": "*.env", "effect": "deny" },
+  { "action": "read", "resource": "*.env.*", "effect": "deny" },
+  { "action": "read", "resource": "*.env.example", "effect": "allow" },
+  { "action": "read", "resource": "*/.ssh/*", "effect": "deny" },
+  { "action": "read", "resource": "*.pem", "effect": "deny" },
+  { "action": "read", "resource": "*.key", "effect": "deny" },
+  { "action": "glob", "resource": "*", "effect": "allow" },
+  { "action": "grep", "resource": "*", "effect": "allow" },
+
+  { "action": "edit", "resource": "*", "effect": "allow" },
+
+  { "action": "shell", "resource": "*", "effect": "allow" },
+  { "action": "shell", "resource": "git status *", "effect": "allow" },
+  { "action": "shell", "resource": "git diff *", "effect": "allow" },
+  { "action": "shell", "resource": "git log *", "effect": "allow" },
+  { "action": "shell", "resource": "ls *", "effect": "allow" },
+  { "action": "shell", "resource": "rg *", "effect": "allow" },
+
+  { "action": "shell", "resource": "sudo *", "effect": "deny" },
+  { "action": "shell", "resource": "rm -rf *", "effect": "deny" },
+  { "action": "shell", "resource": "git push *", "effect": "deny" },
+  { "action": "shell", "resource": "git reset --hard *", "effect": "deny" },
+  { "action": "shell", "resource": "ssh *", "effect": "deny" },
+  { "action": "shell", "resource": "scp *", "effect": "deny" },
+
+  { "action": "external_directory", "resource": "*", "effect": "deny" },
+  { "action": "webfetch", "resource": "*", "effect": "ask" },
+  { "action": "websearch", "resource": "*", "effect": "allow" },
+  { "action": "subagent", "resource": "*", "effect": "allow" }
+]

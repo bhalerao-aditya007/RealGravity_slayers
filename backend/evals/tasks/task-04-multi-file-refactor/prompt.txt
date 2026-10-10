@@ -1,0 +1,1 @@
+Add a function `average(numbers: list[float]) -> float` to python_pkg/math_utils.py that calculates and returns the mean of the numbers (raise ValueError('List cannot be empty') if numbers is empty). Export `average` in python_pkg/__init__.py. Add comprehensive test cases in python_pkg/tests/test_math.py testing both valid calculations and the empty list ValueError.

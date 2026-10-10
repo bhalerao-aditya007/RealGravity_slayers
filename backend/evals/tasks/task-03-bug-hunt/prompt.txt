@@ -1,0 +1,1 @@
+The test suite in python_pkg/tests/test_core.py is currently failing. Investigate python_pkg/core.py and fix the implementation of process_data so that all tests pass. Do not modify the test assertions in test_core.py.

@@ -1,0 +1,46 @@
+{
+  "name": "deskmates",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "bridge:mock": "tsx tools/mock-bridge/server.ts",
+    "tape:record": "tsx scripts/record-tape.ts",
+    "layout:export": "tsx scripts/export-layout.ts",
+    "check": "tsc --noEmit && vitest run"
+  },
+  "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
+    "@react-three/drei": "^9.114.3",
+    "@react-three/fiber": "^8.17.10",
+    "@types/jszip": "^3.4.0",
+    "framer-motion": "^11.11.9",
+    "jspdf": "^2.5.2",
+    "jszip": "^3.10.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.169.0",
+    "zod": "^3.23.8",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@types/three": "^0.169.0",
+    "@types/ws": "^8.18.2",
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "tsx": "^4.23.15",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "vitest": "^2.1.2",
+    "ws": "^8.22.0"
+  }
+}

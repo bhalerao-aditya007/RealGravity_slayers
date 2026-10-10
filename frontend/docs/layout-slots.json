@@ -1,0 +1,423 @@
+{
+  "note": "World units are metres. x = east, z = south, origin = centre of the 96 x 70 m floor. A desk is the SEAT position; the frontend sits the agent there and pathfinds from reception.",
+  "entrance": {
+    "x": 12,
+    "z": 33
+  },
+  "manager_desk": {
+    "chair_id": "execChair_198",
+    "x": 1,
+    "z": -23.6
+  },
+  "bays": {
+    "NW": {
+      "zone_id": "researchBay",
+      "lead_desk": {
+        "chair_id": "wchair_38",
+        "x": -39.25,
+        "z": -8.5
+      },
+      "worker_desks": [
+        {
+          "chair_id": "wchair_1",
+          "x": -33.3,
+          "z": -8.34
+        },
+        {
+          "chair_id": "wchair_4",
+          "x": -31,
+          "z": -8.34
+        },
+        {
+          "chair_id": "wchair_7",
+          "x": -28.7,
+          "z": -8.34
+        },
+        {
+          "chair_id": "wchair_10",
+          "x": -33.3,
+          "z": -11.64
+        },
+        {
+          "chair_id": "wchair_13",
+          "x": -31,
+          "z": -11.64
+        },
+        {
+          "chair_id": "wchair_16",
+          "x": -28.7,
+          "z": -11.64
+        },
+        {
+          "chair_id": "wchair_19",
+          "x": -33.3,
+          "z": -14.94
+        },
+        {
+          "chair_id": "wchair_22",
+          "x": -31,
+          "z": -14.94
+        },
+        {
+          "chair_id": "wchair_25",
+          "x": -28.7,
+          "z": -14.94
+        },
+        {
+          "chair_id": "wchair_28",
+          "x": -33.3,
+          "z": -18.24
+        },
+        {
+          "chair_id": "wchair_31",
+          "x": -31,
+          "z": -18.24
+        },
+        {
+          "chair_id": "wchair_34",
+          "x": -28.7,
+          "z": -18.24
+        }
+      ]
+    },
+    "NE": {
+      "zone_id": "engineeringBay",
+      "lead_desk": {
+        "chair_id": "wchair_90",
+        "x": 37.75,
+        "z": -8.5
+      },
+      "worker_desks": [
+        {
+          "chair_id": "wchair_49",
+          "x": 28.7,
+          "z": -8.34
+        },
+        {
+          "chair_id": "wchair_52",
+          "x": 31,
+          "z": -8.34
+        },
+        {
+          "chair_id": "wchair_56",
+          "x": 33.3,
+          "z": -8.34
+        },
+        {
+          "chair_id": "wchair_59",
+          "x": 28.7,
+          "z": -11.64
+        },
+        {
+          "chair_id": "wchair_62",
+          "x": 31,
+          "z": -11.64
+        },
+        {
+          "chair_id": "wchair_66",
+          "x": 33.3,
+          "z": -11.64
+        },
+        {
+          "chair_id": "wchair_69",
+          "x": 28.7,
+          "z": -14.94
+        },
+        {
+          "chair_id": "wchair_72",
+          "x": 31,
+          "z": -14.94
+        },
+        {
+          "chair_id": "wchair_76",
+          "x": 33.3,
+          "z": -14.94
+        },
+        {
+          "chair_id": "wchair_79",
+          "x": 28.7,
+          "z": -18.24
+        },
+        {
+          "chair_id": "wchair_82",
+          "x": 31,
+          "z": -18.24
+        },
+        {
+          "chair_id": "wchair_86",
+          "x": 33.3,
+          "z": -18.24
+        }
+      ]
+    },
+    "SW": {
+      "zone_id": "dataBay",
+      "lead_desk": {
+        "chair_id": "wchair_138",
+        "x": -40.25,
+        "z": 29.5
+      },
+      "worker_desks": [
+        {
+          "chair_id": "wchair_101",
+          "x": -34.3,
+          "z": 29.66
+        },
+        {
+          "chair_id": "wchair_104",
+          "x": -32,
+          "z": 29.66
+        },
+        {
+          "chair_id": "wchair_107",
+          "x": -29.7,
+          "z": 29.66
+        },
+        {
+          "chair_id": "wchair_110",
+          "x": -34.3,
+          "z": 26.36
+        },
+        {
+          "chair_id": "wchair_113",
+          "x": -32,
+          "z": 26.36
+        },
+        {
+          "chair_id": "wchair_116",
+          "x": -29.7,
+          "z": 26.36
+        },
+        {
+          "chair_id": "wchair_119",
+          "x": -34.3,
+          "z": 23.06
+        },
+        {
+          "chair_id": "wchair_122",
+          "x": -32,
+          "z": 23.06
+        },
+        {
+          "chair_id": "wchair_125",
+          "x": -29.7,
+          "z": 23.06
+        },
+        {
+          "chair_id": "wchair_128",
+          "x": -34.3,
+          "z": 19.76
+        },
+        {
+          "chair_id": "wchair_131",
+          "x": -32,
+          "z": 19.76
+        },
+        {
+          "chair_id": "wchair_134",
+          "x": -29.7,
+          "z": 19.76
+        }
+      ]
+    },
+    "SE": {
+      "zone_id": "contentBay",
+      "lead_desk": {
+        "chair_id": "wchair_186",
+        "x": 38.75,
+        "z": 29.5
+      },
+      "worker_desks": [
+        {
+          "chair_id": "wchair_149",
+          "x": 29.7,
+          "z": 29.66
+        },
+        {
+          "chair_id": "wchair_152",
+          "x": 32,
+          "z": 29.66
+        },
+        {
+          "chair_id": "wchair_155",
+          "x": 34.3,
+          "z": 29.66
+        },
+        {
+          "chair_id": "wchair_158",
+          "x": 29.7,
+          "z": 26.36
+        },
+        {
+          "chair_id": "wchair_161",
+          "x": 32,
+          "z": 26.36
+        },
+        {
+          "chair_id": "wchair_164",
+          "x": 34.3,
+          "z": 26.36
+        },
+        {
+          "chair_id": "wchair_167",
+          "x": 29.7,
+          "z": 23.06
+        },
+        {
+          "chair_id": "wchair_170",
+          "x": 32,
+          "z": 23.06
+        },
+        {
+          "chair_id": "wchair_173",
+          "x": 34.3,
+          "z": 23.06
+        },
+        {
+          "chair_id": "wchair_176",
+          "x": 29.7,
+          "z": 19.76
+        },
+        {
+          "chair_id": "wchair_179",
+          "x": 32,
+          "z": 19.76
+        },
+        {
+          "chair_id": "wchair_182",
+          "x": 34.3,
+          "z": 19.76
+        }
+      ]
+    }
+  },
+  "zones": [
+    {
+      "id": "researchBay",
+      "name": "Research",
+      "kind": "bay",
+      "center": [
+        -31,
+        -14
+      ]
+    },
+    {
+      "id": "engineeringBay",
+      "name": "Engineering",
+      "kind": "bay",
+      "center": [
+        31,
+        -14
+      ]
+    },
+    {
+      "id": "dataBay",
+      "name": "Data",
+      "kind": "bay",
+      "center": [
+        -32,
+        24
+      ]
+    },
+    {
+      "id": "contentBay",
+      "name": "Content",
+      "kind": "bay",
+      "center": [
+        32,
+        24
+      ]
+    },
+    {
+      "id": "manager",
+      "name": "Manager's Cabin",
+      "kind": "cabin",
+      "center": [
+        1,
+        -23
+      ]
+    },
+    {
+      "id": "M1",
+      "name": "Meeting 1",
+      "kind": "meeting",
+      "center": [
+        -9.5,
+        -9.5
+      ]
+    },
+    {
+      "id": "M2",
+      "name": "Meeting 2",
+      "kind": "meeting",
+      "center": [
+        -0.5,
+        -9.5
+      ]
+    },
+    {
+      "id": "M3",
+      "name": "Meeting 3",
+      "kind": "meeting",
+      "center": [
+        8.5,
+        -9.5
+      ]
+    },
+    {
+      "id": "cafeteria",
+      "name": "Cafeteria",
+      "kind": "cafeteria",
+      "center": [
+        -34,
+        6
+      ]
+    },
+    {
+      "id": "pantry",
+      "name": "Pantry",
+      "kind": "pantry",
+      "center": [
+        27,
+        7
+      ]
+    },
+    {
+      "id": "lounge",
+      "name": "Break Lounge",
+      "kind": "lounge",
+      "center": [
+        40,
+        7
+      ]
+    },
+    {
+      "id": "server",
+      "name": "LLM Gateway",
+      "kind": "server",
+      "center": [
+        0,
+        23
+      ]
+    },
+    {
+      "id": "reception",
+      "name": "Reception",
+      "kind": "lobby",
+      "center": [
+        12,
+        29
+      ]
+    },
+    {
+      "id": "plaza",
+      "name": "Central Plaza",
+      "kind": "plaza",
+      "center": [
+        -4,
+        7
+      ]
+    }
+  ],
+  "max_workers_per_department": 12
+}
