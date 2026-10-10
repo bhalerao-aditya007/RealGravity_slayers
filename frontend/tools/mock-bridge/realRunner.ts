@@ -520,10 +520,11 @@ ${task.task_prompt}
 
 ${Object.keys(generatedFiles).length > 0 ? `Already created files in this project:\n` + Object.entries(generatedFiles).map(([f, c]) => `--- ${f} ---\n${c.slice(0, 1500)}`).join('\n\n') : ''}
 
-Instructions:
-Write complete, fully-implemented, runnable code.
-Include thorough comments, clear function names, error handling, and testable examples.
-DO NOT leave placeholder comments, TODOs, or stubs.
+BRUTAL PRODUCTION ARCHITECTURE DIRECTIVES (ZERO DEFECTS):
+- 100% COMPLETE: Never use stubs, placeholders, "...", or "TODO". Every function and method must be completely implemented with production-grade logic.
+- EXPLICIT & COMPLETE IMPORTS: Every single imported function, module, or class MUST be explicitly imported at the top of the file (e.g. in Python: if using math.pi or math.sqrt, you MUST include 'import math'; if using sys, 'import sys'; 'import os'; 'from typing import ...'). Incomplete imports will cause immediate verification failure.
+- BULLETPROOF VALIDATION: Explicitly validate all inputs, boundary conditions, edge cases (zero division, negative values, empty collections).
+- EXECUTABLE: Code must run cleanly without syntax or import errors.
 Return ONLY raw code (no markdown quotes, no conversational filler).`;
 
       const rawCode = await callLLM(
@@ -628,6 +629,7 @@ All tasks were synthesized by the GravityDesk engineering team, gated with permi
 *Generated autonomously by GravityDesk Multi-Agent Floor.*
 `;
 
+    fs.mkdirSync(outputDir, { recursive: true });
     fs.writeFileSync(path.join(outputDir, 'README.md'), reportMd, 'utf-8');
 
     emitEvent(run, 'result.final', undefined, undefined, {

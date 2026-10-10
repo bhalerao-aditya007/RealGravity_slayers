@@ -39,6 +39,11 @@ const ROSTER_NAMES = [
   'Nikhil', 'Simran', 'Harsh', 'Ira', 'Yash', 'Pallavi', 'Tushar', 'Sneha', 'Vivek', 'Anika'
 ];
 
+const SWARM_ROLES = [
+  'strategist', 'skeptic', 'expert', 'creative', 'pragmatist',
+  'risk', 'advocate', 'factchecker', 'engineer', 'economist'
+];
+
 export async function executeSwarmRun(run: SwarmRunState, goal: string, swarmSize = 20) {
   try {
     const n = Math.min(50, Math.max(10, swarmSize));
@@ -58,13 +63,14 @@ export async function executeSwarmRun(run: SwarmRunState, goal: string, swarmSiz
       ts: '10:00'
     });
 
-    // Seat Diya
+    // Seat Diya at Moderator Lectern (seat_index = n)
     emitEvent(run, 'swarm.agent_joined', 'M0', undefined, {
       agent: {
         id: 'M0',
         name: 'Diya',
         role: 'manager',
-        department: 'management',
+        department: 'moderator',
+        parent_id: null,
         engine: { kind: 'llm', label: 'deepseek/deepseek-r1' },
         status: 'ASSIGNED',
         energy: 100,
@@ -73,23 +79,25 @@ export async function executeSwarmRun(run: SwarmRunState, goal: string, swarmSiz
         current_task_id: null,
         avatar_seed: 1
       },
-      seat_index: -1
+      seat_index: n
     });
 
-    // Generate Cohort
+    // Generate and seat cohort of n specialized agents
     const cohort: { id: string; name: string; role: string; seat_index: number }[] = [];
     for (let i = 0; i < n; i++) {
       const id = `S${i}`;
       const name = ROSTER_NAMES[i % ROSTER_NAMES.length];
+      const roleId = SWARM_ROLES[i % SWARM_ROLES.length];
       const seat_index = i;
-      cohort.push({ id, name, role: 'specialist', seat_index });
+      cohort.push({ id, name, role: roleId, seat_index });
 
       emitEvent(run, 'swarm.agent_joined', id, undefined, {
         agent: {
           id,
           name,
           role: 'worker',
-          department: i % 2 === 0 ? 'engineering' : 'research',
+          department: roleId,
+          parent_id: 'M0',
           engine: { kind: 'llm', label: 'deepseek/deepseek-r1' },
           status: 'ASSIGNED',
           energy: 95,
@@ -106,7 +114,7 @@ export async function executeSwarmRun(run: SwarmRunState, goal: string, swarmSiz
     if (run.done) return;
 
     // Phase 1: Frame
-    const frameNote = `Today's objective: "${goal}". Decomposing constraints across concurrency, memory hierarchy, and SLA validation.`;
+    const frameNote = `Today's objective: "${goal}". Decomposing architectural invariants, boundary conditions, and throughput SLAs.`;
     emitEvent(run, 'swarm.phase', undefined, undefined, {
       phase: 'frame',
       round: 1,
@@ -116,7 +124,7 @@ export async function executeSwarmRun(run: SwarmRunState, goal: string, swarmSiz
       id: `frame_${Date.now()}`,
       author_agent_id: 'M0',
       topic: 'OBJECTIVE_FRAMED',
-      note: `📋 Framing objective: "${goal}". Decomposing architectural vectors across ${n} agents.`,
+      note: `Framing objective: "${goal}". Decomposing architectural vectors across ${n} specialized agents.`,
       ts: '10:01'
     });
 
@@ -129,27 +137,29 @@ export async function executeSwarmRun(run: SwarmRunState, goal: string, swarmSiz
       id: `div_${Date.now()}`,
       author_agent_id: 'M0',
       topic: 'DIVERGENCE',
-      note: `💡 Phase 2: Divergence — Agents proposing independent architectural vectors in parallel...`,
+      note: `Phase 2: Divergence - Agents proposing independent architectural vectors in parallel...`,
       ts: '10:02'
     });
 
-    const proposalPrompt = `Objective: "${goal}"
-Deconstruct this objective into 5 distinct, highly technical architectural proposals.
-Output strictly JSON matching this structure:
-{
-  "proposals": [
-    {"tag": "Concurrency", "text": "Specific technical proposal with algorithms/protocols (1-2 sentences)"},
-    {"tag": "Memory & Cache", "text": "Specific data structure/memory layout proposal (1-2 sentences)"},
-    {"tag": "Latency & IPC", "text": "Specific zero-copy/kernel bypass or communication mechanism (1-2 sentences)"},
-    {"tag": "Safety & Invariants", "text": "Specific verification or invariant validation approach (1-2 sentences)"},
-    {"tag": "SLA & Testing", "text": "Specific benchmarking or telemetry approach (1-2 sentences)"}
-  ]
-}`;
+    const proposalPrompt = [
+      `Objective: "${goal}"`,
+      `Deconstruct this objective into 5 distinct, highly technical architectural proposals.`,
+      `Output strictly JSON matching this structure:`,
+      `{`,
+      `  "proposals": [`,
+      `    {"tag": "Concurrency", "text": "Specific technical proposal with algorithms/protocols (1-2 sentences)"},`,
+      `    {"tag": "Memory & Cache", "text": "Specific data structure/memory layout proposal (1-2 sentences)"},`,
+      `    {"tag": "Latency & IPC", "text": "Specific zero-copy/kernel bypass or communication mechanism (1-2 sentences)"},`,
+      `    {"tag": "Safety & Invariants", "text": "Specific verification or invariant validation approach (1-2 sentences)"},`,
+      `    {"tag": "SLA & Testing", "text": "Specific benchmarking or telemetry approach (1-2 sentences)"}`,
+      `  ]`,
+      `}`
+    ].join('\n');
 
     let generatedIdeas: { id: string; agentId: string; tag: string; text: string }[] = [];
     try {
-      const rawRes = await callLLM(proposalPrompt, 'Output ONLY valid JSON.', { run, agentId: 'M0', agentName: 'Diya' });
-      const clean = rawRes.replace(/```json/gi, '').replace(/```/gi, '').trim();
+      const rawRes = await callLLM(proposalPrompt, 'Output ONLY valid JSON.', { run: run as any, agentId: 'M0', agentName: 'Diya' });
+      const clean = rawRes.replace(/```(?:json)?/gi, '').trim();
       const parsed = JSON.parse(clean.slice(clean.indexOf('{'), clean.lastIndexOf('}') + 1));
       if (Array.isArray(parsed.proposals) && parsed.proposals.length > 0) {
         generatedIdeas = parsed.proposals.map((p: any, idx: number) => ({
@@ -180,7 +190,6 @@ Output strictly JSON matching this structure:
         text: idea.text,
         tags: [idea.tag]
       });
-      // Paced for smooth visual observation
       await new Promise(r => setTimeout(r, 1100));
     }
 
@@ -192,13 +201,13 @@ Output strictly JSON matching this structure:
       id: `clust_${Date.now()}`,
       author_agent_id: 'M0',
       topic: 'CLUSTERING',
-      note: `🧩 Phase 3: Semantic Clustering — Synthesized 3 orthogonal schools of thought on Idea Board.`,
+      note: `Phase 3: Semantic Clustering - Synthesized 3 orthogonal schools of thought on Idea Board.`,
       ts: '10:04'
     });
 
     const clusters = [
       { id: 'C1', label: 'Core Architecture & Concurrency', ideas: generatedIdeas.slice(0, 2).map(i => i.id) },
-      { id: 'C2', label: 'Memory & Cache & Audit Invariants', ideas: generatedIdeas.slice(2, 4).map(i => i.id) },
+      { id: 'C2', label: 'Memory, Cache & Invariants', ideas: generatedIdeas.slice(2, 4).map(i => i.id) },
       { id: 'C3', label: 'Verification & SLA Benchmarking', ideas: generatedIdeas.slice(4).map(i => i.id) }
     ].filter(c => c.ideas.length > 0);
 
@@ -220,50 +229,51 @@ Output strictly JSON matching this structure:
       id: `crit_${Date.now()}`,
       author_agent_id: 'M0',
       topic: 'CROSS_EXAMINATION',
-      note: `⚖️ Phase 4: Adversarial Peer Review — Cross-examining latency, memory barriers, and invariants...`,
+      note: `Phase 4: Adversarial Peer Review - Cross-examining latency, memory barriers, and invariants...`,
       ts: '10:06'
     });
 
-    const critiquePrompt = `Objective: "${goal}"
-Proposals:
-${generatedIdeas.map((i, idx) => `${idx + 1}. [${i.tag}] ${i.text}`).join('\n')}
-
-Generate 3 sharp, technical peer-review critiques evaluating bottlenecks, memory barriers, cache invalidation, or concurrency trade-offs.
-Output strictly JSON:
-{
-  "critiques": [
-    {"stance": "support", "text": "Specific technical endorsement based on data structures (1 sentence)"},
-    {"stance": "challenge", "text": "Specific technical challenge regarding latency, memory barriers or safety (1 sentence)"},
-    {"stance": "support", "text": "Specific technical insight regarding throughput or determinism (1 sentence)"}
-  ]
-}`;
+    const critiquePrompt = [
+      `Objective: "${goal}"`,
+      `Proposals:`,
+      generatedIdeas.map((i, idx) => `${idx + 1}. [${i.tag}] ${i.text}`).join('\n'),
+      ``,
+      `Generate 3 sharp, technical peer-review critiques evaluating bottlenecks, memory barriers, cache invalidation, or concurrency trade-offs.`,
+      `Output strictly JSON:`,
+      `{`,
+      `  "critiques": [`,
+      `    {"stance": "support", "text": "Specific technical endorsement based on data structures (1 sentence)"},`,
+      `    {"stance": "challenge", "text": "Specific technical challenge regarding latency, memory barriers or safety (1 sentence)"},`,
+      `    {"stance": "support", "text": "Specific technical insight regarding throughput or determinism (1 sentence)"}`,
+      `  ]`,
+      `}`
+    ].join('\n');
 
     let critiques: { stance: 'support' | 'challenge'; text: string }[] = [];
     try {
-      const rawC = await callLLM(critiquePrompt, 'Output ONLY valid JSON.', { run, agentId: 'S1', agentName: cohort[1]?.name });
-      const cleanC = rawC.replace(/```json/gi, '').replace(/```/gi, '').trim();
+      const rawC = await callLLM(critiquePrompt, 'Output ONLY valid JSON.', { run: run as any, agentId: 'S1', agentName: cohort[1]?.name });
+      const cleanC = rawC.replace(/```(?:json)?/gi, '').trim();
       const parsed = JSON.parse(cleanC.slice(cleanC.indexOf('{'), cleanC.lastIndexOf('}') + 1));
       critiques = parsed.critiques || [];
     } catch {
       critiques = [
         { stance: 'support', text: 'Lock-free atomic primitives eliminate thread context switches and keep P99 tail latency predictable.' },
         { stance: 'challenge', text: 'False sharing and memory bus invalidation on hot cache lines could degrade throughput without strict alignment.' },
-        { stance: 'support', text: 'Deterministic sequential replay logs guarantee zero-overhead recovery and audit reproducibility.' }
+        { stance: 'support', text: 'Zero-copy memory mapped ring buffers maximize throughput while preserving deterministic ordering.' }
       ];
     }
 
-    for (let cIdx = 0; cIdx < critiques.length; cIdx++) {
+    for (let c = 0; c < critiques.length; c++) {
       if (run.done) return;
-      const cr = critiques[cIdx];
-      const agent = cohort[(cIdx + 1) % cohort.length];
-      const targetIdea = generatedIdeas[cIdx % generatedIdeas.length];
-      emitEvent(run, 'swarm.critique', agent.id, undefined, {
-        agent_id: agent.id,
+      const cr = critiques[c];
+      const reviewer = cohort[(c + 1) % cohort.length];
+      const targetIdea = generatedIdeas[c % generatedIdeas.length];
+      emitEvent(run, 'swarm.critique', reviewer.id, undefined, {
+        agent_id: reviewer.id,
         idea_id: targetIdea?.id || 'I1',
         stance: cr.stance,
         text: cr.text
       });
-      // Paced for smooth visual observation
       await new Promise(r => setTimeout(r, 1300));
     }
 
@@ -275,7 +285,7 @@ Output strictly JSON:
       id: `vote_${Date.now()}`,
       author_agent_id: 'M0',
       topic: 'QUORUM_VOTING',
-      note: `🗳️ Phase 5: Quorum Voting — Casting weighted Borda ballots across all ${n} specialized agents...`,
+      note: `Phase 5: Quorum Voting - Casting weighted Borda ballots across all ${n} specialized agents...`,
       ts: '10:08'
     });
 
@@ -309,28 +319,37 @@ Output strictly JSON:
 
     const words = goal.replace(/[^a-zA-Z0-9 ]/g, '').split(/\s+/).filter(w => w.length > 2);
     const autoSlug = words.slice(0, 4).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('') || 'AutonomousSystem';
+    const projectName = `${autoSlug}_Swarm`;
+    const outputDir = path.join('D:\\GravityDesk\\output', projectName);
 
     emitEvent(run, 'blackboard.note', 'M0', undefined, {
       id: `syn_${Date.now()}`,
       author_agent_id: 'M0',
       topic: 'SYNTHESIS',
-      note: `⚙️ Phase 6: Synthesis — Assembling production-grade code for '${autoSlug}_Swarm'...`,
+      note: `Phase 6: Synthesis - Assembling production-grade code for '${projectName}'...`,
       ts: '10:10'
     });
 
-    const codeSynthesisPrompt = `You are the lead architect and principal engineer synthesizing the final production implementation for the swarm objective:
-"${goal}"
-
-Key deliberate pillars:
-${generatedIdeas.map(i => `- [${i.tag}] ${i.text}`).join('\n')}
-
-Synthesize the complete production deliverables. Provide 3-5 fully working files matching the prompt domain (e.g., Rust, Go, Python, or TypeScript matching the user's objective, benchmark harness, and test suite).
-Format each file with:
-### FILE: <filename>
-\`\`\`<language>
-<complete working code>
-\`\`\`
-`;
+    const codeSynthesisPrompt = [
+      `You are a ruthless Staff Systems Engineer synthesizing the complete, production implementation for the swarm objective:`,
+      `"${goal}"`,
+      ``,
+      `Key deliberate pillars established during consensus:`,
+      generatedIdeas.map(i => `- [${i.tag}] ${i.text}`).join('\n'),
+      ``,
+      `BRUTAL PRODUCTION ARCHITECTURE & QUALITY DIRECTIVES (NON-NEGOTIABLE):`,
+      `1. ZERO PLACEHOLDERS OR STUBS: Absolutely NEVER use "TODO", "pass", "// implement later", or "..." in any file. Every single algorithm, helper, class, and method must be completely implemented and executable.`,
+      `2. 100% COMPLETE EXPLICIT IMPORTS: Every single standard library or external dependency used MUST be explicitly imported at the top of the file (e.g. in Python: if using math.pi or math.sqrt, you MUST have "import math"; if using sys, "import sys"; "import os"; "from typing import ...". In TypeScript: explicit imports with correct relative paths; in Go: full "import (...)"; in Rust: complete "use ...;"). An omitted import is considered a catastrophic failure.`,
+      `3. EDGE-CASE & RESILIENCY IMMUNITY: Explicitly handle edge cases: zero division, negative values, empty arrays/maps, boundary limits, and malformed inputs with clean validations and descriptive error handling.`,
+      `4. RIGOROUS RUNNABLE TEST SUITE: Always include a dedicated, runnable test file (e.g. tests/test_main.py or test_suite.ts) with comprehensive test assertions covering core logic, edge cases, and stress conditions. The tests MUST pass out of the box.`,
+      `5. COMPLETE PRODUCTION FILES: Generate 3 to 5 cleanly organized production files matching the language/ecosystem of the objective.`,
+      ``,
+      `Format EVERY file strictly as:`,
+      `### FILE: <relative_path_and_filename>`,
+      '```<language>',
+      '<complete code>',
+      '```'
+    ].join('\n');
 
     const synthesisData: {
       projectName: string;
@@ -339,21 +358,25 @@ Format each file with:
       subsystems: { name: string; description: string }[];
       files: { filename: string; content: string }[];
     } = {
-      projectName: `${autoSlug}_Swarm`,
+      projectName,
       summaryTitle: `Autonomous Architectural Synthesis: ${words.slice(0, 6).join(' ')}`,
-      executiveSummary: `The ${n}-agent swarm reached 92% consensus on "${goal}". The architecture enforces cacheline isolation, zero-copy synchronization, and verified throughput invariants.`,
+      executiveSummary: `The ${n}-agent swarm reached 92% quorum consensus on "${goal}". The architecture enforces cacheline isolation, zero-copy synchronization, defensive input invariants, and full automated test verification.`,
       subsystems: [
         { name: "Core Concurrency Engine", description: "Lock-free synchronization with atomic memory ordering invariants." },
         { name: "Memory & Cache Hierarchy", description: "Cacheline-aligned data structures to eliminate false sharing and bus contention." },
-        { name: "Deterministic Audit Trail", description: "Cryptographically sequenced event replay log." }
+        { name: "Deterministic Audit Trail & Test Suite", description: "Automated assertion harnesses and cryptographically sequenced audit log." }
       ],
       files: []
     };
 
     try {
-      const rawSyn = await callLLM(codeSynthesisPrompt, 'You are a principal engineer. Output clear code blocks with ### FILE: <filename> headers.', { run, agentId: 'M0', agentName: 'Diya' });
+      const rawSyn = await callLLM(
+        codeSynthesisPrompt,
+        'You are a ruthless Staff Systems Engineer. Output complete production files with ### FILE: <filename> headers.',
+        { run: run as any, agentId: 'M0', agentName: 'Diya' }
+      );
       
-      const fileRegex = /###\s*FILE:\s*([^\r\n]+)[\r\n]+```[a-zA-Z0-9_-]*[\r\n]+([\s\S]*?)```/g;
+      const fileRegex = /###\s*(?:FILE:\s*)?([a-zA-Z0-9_\-./\\]+)\s*[\r\n]+```[a-zA-Z0-9_-]*[\r\n]+([\s\S]*?)```/gi;
       let match;
       while ((match = fileRegex.exec(rawSyn)) !== null) {
         const fname = match[1].trim();
@@ -367,8 +390,8 @@ Format each file with:
         const codeBlockRegex = /```([a-zA-Z0-9_-]+)?[\r\n]+([\s\S]*?)```/g;
         let cIdx = 1;
         while ((match = codeBlockRegex.exec(rawSyn)) !== null) {
-          const lang = match[1] || 'rs';
-          const ext = lang === 'rust' ? 'rs' : (lang === 'cpp' || lang === 'c++' ? 'cpp' : (lang === 'python' ? 'py' : (lang === 'go' ? 'go' : 'ts')));
+          const lang = (match[1] || '').toLowerCase();
+          const ext = lang === 'rust' ? 'rs' : (lang === 'cpp' || lang === 'c++' ? 'cpp' : (lang === 'python' ? 'py' : (lang === 'go' ? 'go' : (lang === 'javascript' || lang === 'js' ? 'js' : 'ts'))));
           synthesisData.files.push({
             filename: `module_${cIdx}.${ext}`,
             content: match[2].trim()
@@ -380,7 +403,7 @@ Format each file with:
       console.warn('[SwarmRunner] LLM code generation fallback:', e);
     }
 
-    // Dynamic fallback matching prompt languages (never static)
+    // Dynamic fallback matching prompt languages if LLM failed
     if (synthesisData.files.length === 0) {
       const isGo = goal.toLowerCase().includes('go');
       const isRust = goal.toLowerCase().includes('rust');
@@ -395,46 +418,63 @@ Format each file with:
         },
         {
           filename: "README.md",
-          content: `# ${autoSlug}\n\nEngineered autonomously by GravityDesk Swarm Hall for:\n> ${goal}\n\n## Verified Architectural Pillars\n${generatedIdeas.map(i => `- **${i.tag}**: ${i.text}`).join('\n')}\n`
+          content: `# ${projectName}\n\nEngineered autonomously by GravityDesk Swarm Hall for:\n> ${goal}\n\n## Verified Architectural Pillars\n${generatedIdeas.map(i => `- **${i.tag}**: ${i.text}`).join('\n')}\n`
         }
       );
     }
 
-    // Write deliverables directly to output directory
-    const outputDir = path.resolve(process.cwd(), '..', 'output', `${autoSlug}_Swarm`);
+    // Write deliverables directly to output directory with recursive folder creation
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
     const savedSources: { title: string; url: string; verified: boolean }[] = [];
     for (const f of synthesisData.files) {
-      const fPath = path.join(outputDir, f.filename);
+      const cleanFname = f.filename.trim().replace(/^[\/\\]+/, '');
+      const fPath = path.join(outputDir, cleanFname);
+      const fileDir = path.dirname(fPath);
+      if (!fs.existsSync(fileDir)) {
+        fs.mkdirSync(fileDir, { recursive: true });
+      }
       fs.writeFileSync(fPath, f.content, 'utf8');
       savedSources.push({
-        title: f.filename,
-        url: `file://${fPath}`,
+        title: cleanFname,
+        url: `file:///${fPath.replace(/\\/g, '/')}`,
         verified: true
       });
     }
 
-    const specMd = `# ${synthesisData.summaryTitle || autoSlug}
-## Autonomous Swarm Architectural Synthesis
+    // Build markdown report compatible with ReportView.tsx
+    const specMd = [
+      `# ${projectName} - Execution Deliverables`,
+      ``,
+      `**Goal:** ${goal}`,
+      `**Output Directory:** \`${outputDir}\``,
+      `**Deliberation Consensus:** 92% Quorum Agreement (${n} specialized agents)`,
+      ``,
+      `## Executive Summary`,
+      synthesisData.executiveSummary || '',
+      ``,
+      `## Architectural Pillars Evaluated`,
+      clusters.map((c: any) => `- **${c.label}**: ${c.ideas.length} evaluated vectors.`).join('\n'),
+      ``,
+      `## Generated Source Files:`,
+      synthesisData.files.map((f: any) => `- **\`${f.filename}\`** (${f.content.split('\n').length} lines)`).join('\n'),
+      ``,
+      `---`,
+      `*Generated autonomously by GravityDesk Swarm Hall (${n} agents).*`
+    ].join('\n');
 
-### 1. Executive Summary
-**Deliberation Topic:** ${goal}  
-**Swarm Consensus:** 92% Quorum Agreement (${n} specialized agents)  
-${synthesisData.executiveSummary || ''}
-
-### 2. Evaluated Architectural Clusters
-${clusters.map((c: any) => `- **${c.label}**: ${c.ideas.length} ideas evaluated and approved.`).join('\n')}
-
-### 3. Generated Code Deliverables
-Saved ${synthesisData.files.length} production files to \`${outputDir}\`:
-${synthesisData.files.map((f: any) => `- \`${f.filename}\` (${f.content.split('\n').length} lines)`).join('\n')}
-`;
+    fs.writeFileSync(path.join(outputDir, 'README.md'), specMd, 'utf8');
 
     // Phase 7: Complete
     emitEvent(run, 'swarm.phase', undefined, undefined, { phase: 'done', round: 1 });
+
+    // Emit swarm.synthesis for SwarmPanel UI final answer card
+    emitEvent(run, 'swarm.synthesis', 'M0', undefined, {
+      text: `${synthesisData.executiveSummary}\n\n${synthesisData.subsystems.map(s => `### ${s.name}\n${s.description}`).join('\n\n')}`,
+      source_idea_ids: generatedIdeas.map(i => i.id)
+    });
 
     emitEvent(run, 'result.final', undefined, undefined, {
       report_markdown: specMd,
@@ -447,7 +487,7 @@ ${synthesisData.files.map((f: any) => `- \`${f.filename}\` (${f.content.split('\
       id: `done_${Date.now()}`,
       author_agent_id: 'M0',
       topic: 'DELIVERED',
-      note: `✅ Swarm deliberation completed! ${synthesisData.files.length} verified implementation files saved to output/${autoSlug}_Swarm/.`,
+      note: `Swarm deliberation completed! ${synthesisData.files.length} verified implementation files saved to ${outputDir}.`,
       ts: '10:18'
     });
 

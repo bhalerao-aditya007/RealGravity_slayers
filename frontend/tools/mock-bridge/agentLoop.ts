@@ -211,6 +211,7 @@ Final Answer: <Complete summary of what was accomplished, files created, and how
       const finalIndex = response.indexOf('Final Answer:');
       const finalReport = response.slice(finalIndex + 13).trim();
 
+      fs.mkdirSync(projectDir, { recursive: true });
       fs.writeFileSync(path.join(projectDir, 'README.md'), finalReport, 'utf-8');
 
       emitEvent(run, 'result.final', undefined, undefined, {

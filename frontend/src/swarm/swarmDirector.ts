@@ -35,11 +35,12 @@ export class SwarmDirector {
   reset() { this.runtimes = []; this.byId.clear(); this.slotsUsed.clear(); this.chairSlides.clear(); this.time = 0; this.speakingId = null; }
   rt(id: string) { return this.byId.get(id); }
   pos(id: string) { const r = this.byId.get(id); return r ? { x: r.x, z: r.z } : null; }
-  private seat(idx: number) { return idx >= this.layout.n ? this.layout.moderatorSeat : this.layout.seats[idx]; }
+  private seat(idx: number) { return (idx >= this.layout.n || idx < 0) ? this.layout.moderatorSeat : (this.layout.seats[idx] ?? this.layout.moderatorSeat); }
 
   join(id: string, seed: number, roleId: string, seatIdx: number, isMod: boolean, instant = false) {
     if (this.byId.has(id)) return;
     const s = this.seat(seatIdx);
+    if (!s) return;
     const hasDoorWalker = this.runtimes.some((r) => r.state === 'door' || (r.state === 'lane' && r.z > this.layout.hall.depth / 2 - 2.0));
     const rt: SRT = {
       id, seed, roleId, isMod, x: (seatIdx % 2 === 0 ? -0.35 : 0.35), z: this.layout.hall.depth / 2 - 0.8,

@@ -4,11 +4,15 @@ import { TriageTaskClasses } from '@/config/office';
 export const AgentSchema = z.object({
   id: z.string(), name: z.string(),
   role: z.enum(['manager', 'lead', 'worker']),
-  department: z.string().nullable(),
-  parent_id: z.string().nullable(),
-  engine: z.object({ kind: z.enum(['llm', 'tool', 'code']), label: z.string() }),
-  status: z.string(), energy: z.number(), context_tokens: z.number(), context_max: z.number(),
-  current_task_id: z.string().nullable(), avatar_seed: z.number(),
+  department: z.string().nullable().default(null),
+  parent_id: z.string().nullable().default(null),
+  engine: z.object({ kind: z.enum(['llm', 'tool', 'code']), label: z.string() }).default({ kind: 'llm', label: 'deepseek/deepseek-r1' }),
+  status: z.string().default('ASSIGNED'),
+  energy: z.number().default(100),
+  context_tokens: z.number().default(0),
+  context_max: z.number().default(65536),
+  current_task_id: z.string().nullable().default(null),
+  avatar_seed: z.number().default(1),
 }).passthrough();
 export type Agent = z.infer<typeof AgentSchema>;
 
